@@ -12,7 +12,7 @@ class dbConnect {
      * @return database connection handler
      */
     function connect() {
-        include_once '../config.php';
+        include_once 'config.php';
 
         // Connecting to mysql database
         $this->conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME);
@@ -24,6 +24,7 @@ class dbConnect {
         $this->conn->query("SET NAMES 'utf8'"); 
         $this->conn->query("SET CHARACTER SET utf8");  
         $this->conn->query("SET SESSION collation_connection = 'utf8_unicode_ci'"); 
+        
         // returing connection resource
         return $this->conn;
     }
