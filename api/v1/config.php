@@ -1,5 +1,10 @@
 <?php
 
+/*define('DB_USERNAME', 'admin_tws');
+define('DB_PASSWORD', 'Gaib!lre1098');
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'winespy');*/
+
 $path = "prod";
 
 if($path="local") {
@@ -12,11 +17,17 @@ if($path="local") {
     define('DB_PASSWORD', 'ceee67d0');
     define('DB_HOST', 'eu-cdbr-west-01.cleardb.com');
     define('DB_NAME', 'heroku_98351473a97f46b');
+}elseif($path="prod"){
+    define('DB_USERNAME', 'admin_tws');
+    define('DB_PASSWORD', 'Gaib!lre1098');
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'winespy');
 }else{
     define('DB_USERNAME', 'bb09e944f961bf');
     define('DB_PASSWORD', 'cb04c6ff');
     define('DB_HOST', 'eu-cdbr-west-01.cleardb.com');
-    define('DB_NAME', 'heroku_941cbffbc91d114');  
+    define('DB_NAME', 'heroku_941cbffbc91d114');
+}
 }
 
 
