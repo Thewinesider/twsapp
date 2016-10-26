@@ -1,0 +1,108 @@
+<div id="page-wrapper" class="gray-bg">
+    <div class="row border-bottom">
+        <nav class="navbar navbar-static-top" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary" ng-click="closeMenu()"><i class="fa fa-bars"></i> </a>
+            </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <span class="m-r-sm text-muted welcome-message">
+                        Welcome to The Winesider
+                    </span>
+                </li>
+                <li>
+                    <a ng-click="logout()">
+                        <i class="fa fa-sign-out"></i> Log out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-12">
+            <h2>The Winesider Full Catalog</h2>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <a href="#/catalog-grid"><strong>View as a grid</strong></a>
+                </li>
+                <li>
+                    <a href="#/catalog-list">View as a list</a>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight" ng-init="getFullWineList()">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label" for="product_name">Search</label>
+                        <input ng-model="name.filterModel" type="text" id="product_name" name="product_name" ng-value="" placeholder="Product Name" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label" for="status">Producer</label>
+                        <select name="status" id="status" class="form-control" ng-model="producer.filterModel">
+                            <option value="" selected>All</option>
+                            <option ng-repeat="producer in producers" ng-value="producer.producer">{{producer.producer}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label" for="status">Region</label>
+                        <select name="status" id="status" class="form-control" ng-model="region.filterModel">
+                            <option value="" selected>All</option>
+                            <option ng-repeat="region in regions" ng-value="region.region">{{region.region}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label" for="status">Type</label>
+                        <select name="status" id="status" class="form-control" ng-model="type.filterModel">
+                            <option value="" selected>All</option>
+                            <option value="Bianco">Bianco</option>
+                            <option value="Rosso">Rosso</option>
+                            <option value="Bollicine">Bollicine</option>
+                            <option value="Rosato">Rosato</option>
+                            <option value="Champagne">Champagne</option>
+                            <option value="Vino dolce">Vino dolce</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div ng-repeat="wine in wines | filter:{description : name.filterModel, type: type.filterModel, region : region.filterModel, producer : producer.filterModel}">
+                <div ng-if="$index % 4 == 0" class="clearfix"></div>
+                <div class="col-md-3">
+                    <div class="ibox">
+                        <div class="ibox-content product-box">
+                            <div class="product-imitation">
+                                [ WINE IMAGE ]
+                            </div>
+                            <div class="product-desc">
+                                <!--span class="product-price">
+$10
+</span-->
+                                <small class="text-muted">{{wine.producer}}</small>
+                                <a href="#" class="product-name">{{wine.name}}</a>
+                                <div class="small m-t-xs">
+                                    {{wine.description}}
+                                </div>
+                                <div class="m-t text-righ">
+                                    <div class="btn btn-xs btn-outline btn-primary">{{wine.region}}</div>
+                                    <div class="btn btn-xs btn-outline btn-primary">{{wine.type}}</div>
+                                    <div class="btn btn-xs btn-outline btn-primary">{{wine.alcohol}}&deg;</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,20 @@
+<div class="gray-bg">
+    <div class="middle-box text-center loginscreen animated fadeInDown">
+        <div class="logo"></div>
+        <h3>Welcome to The Winesider</h3>
+        <p>Perfectly designed to manage your wine cellar.</p>
+        <p>Login in to see it in action.</p>
+        <form class="m-t" role="form" name="loginForm">
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Username" ng-model="login.email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" ng-model="login.password" required>
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b" ng-click="doLogin(login)">Login</button>
+            <!--a href="#"><small>Forgot password?</small></a-->
+            <a class="btn btn-sm btn-white btn-block" href="#/signup">Create an account</a>
+        </form>
+        <p class="m-t"> <small>TWS 0.1 2016 - made with &#9825; in Turin </small> </p>
+    </div>
+</div>

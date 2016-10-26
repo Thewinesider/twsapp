@@ -1,0 +1,24 @@
+<div id="wineDownload">
+    <div ng-controller="modalCtrl" class="modal-body" id="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <p>{{wineName}}</p>
+            </div>
+            <div class="col-md-3">
+                <button class="btn-addremove"  ng-click="removeWine()"> - </button>
+            </div>
+            <div class="col-md-6">
+                <input type="text" ng-value="value" disabled>
+            </div>
+            <div class="col-md-3">
+                <button class="btn-addremove" ng-click="addWine()"> + </button>
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-primary green" type="button" ng-click="addWineSpy(wineSKU,value)">OK</button>          
+        </div>
+        <div>
+            <a ng-click="dismissModal()">CLOSE</a>
+        </div>
+    </div>
+</div>
