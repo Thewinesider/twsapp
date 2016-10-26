@@ -50,7 +50,7 @@ $app->post('/login', function() use ($app) {
     $db = new DbHandler();
     $password = $r->customer->password;
     $email = $r->customer->email;
-    $user = $db->getOneRecord("select uid,name,password,email,created from users where or email='$email'");
+    $user = $db->getOneRecord("SELECT uid,name,password,email,created FROM users WHERE email='$email'");
     if ($user != NULL) {
         if(passwordHash::check_password($user['password'],$password)){
             $response['status'] = "success";
