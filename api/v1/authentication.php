@@ -10,7 +10,7 @@ $app->get('/session', function() {
 $app->get('/getWineList', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
-    $wines= $db->getRecord("SELECT winelist.sku, catalog.type, winelist.name, catalog.description, catalog.producer, catalog.alcohol, catalog.region  FROM winelist,catalog WHERE id_user = 1 AND catalog.sku = winelist.sku");
+    $wines= $db->getRecord("SELECT winelist.sku, catalog.type, winelist.name, catalog.description, catalog.producer, catalog.alcohol, catalog.region  FROM winelist,catalog WHERE id_user = ". $session['uid'] . " AND catalog.sku = winelist.sku");
     //echo "SELECT * FROM winelist,catalog WHERE id_user = " . $session['uid'] . " AND catalog.sku = winelist.sku";
     echoResponse(200, $wines);
 });
@@ -50,7 +50,7 @@ $app->post('/login', function() use ($app) {
     $db = new DbHandler();
     $password = $r->customer->password;
     $email = $r->customer->email;
-    $user = $db->getOneRecord("SELECT uid,name,password,email,created FROM users WHERE email='$email'");
+    $user = $db->getOneRecord("SELECT uid,name,password,email,created,role FROM users WHERE email='$email'");
     if ($user != NULL) {
         if(passwordHash::check_password($user['password'],$password)){
             $response['status'] = "success";
@@ -59,6 +59,7 @@ $app->post('/login', function() use ($app) {
             $response['uid'] = $user['uid'];
             $response['email'] = $user['email'];
             $response['createdAt'] = $user['created'];
+            $response['role'] = $user['role'];
             if (!isset($_SESSION)) {
                 session_start();
             }
@@ -83,12 +84,12 @@ $app->post('/signUp', function() use ($app) {
     $db = new DbHandler();
     $name = $r->customer->name;
     $surname = $r->customer->surname;
-    $role = $r->customer->role;
+    $role =  "";
     $restaurant = $r->customer->restaurant;
-    $address = $r->customer->address;
+    $address =  "";
     $email = $r->customer->email;
     $password = $r->customer->password;
-    $phone = $r->customer->phone;
+    $phone = "";
     $isUserExists = $db->getOneRecord("SELECT 1 FROM users WHERE email='$email'");
     if(!$isUserExists){
         $r->customer->password = passwordHash::hash($password);

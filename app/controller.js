@@ -7,6 +7,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
             customer: customer
         }).then(function (results) {
             Data.toast(results);
+            $scope.user = results;
             if (results.status == "success") {
                 $location.path('winespy');
             }
@@ -47,7 +48,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
         }).then(function (results) {
             Data.toast(results);
             if (results.status == "success") {
-                $location.path('dashboard');
+                $location.path('winespy');
             }
         });
     };
