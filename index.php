@@ -35,8 +35,8 @@
                         </div>
                     </li>
                     <li class="active">
-                        <a ng-href="#/dashboard"><i class="fa fa-line-chart"></i> <span class="nav-label">Dashboard</span> </a>
-                        <a ng-href="#/catalog-list"><i class="fa fa-glass"></i> <span class="nav-label">TWS Catalog</span> </a>
+                        <a ng-href="#/dashboard" ng-show="results.role == 'admin'"><i class="fa fa-line-chart"></i> <span class="nav-label">Dashboard</span> </a>
+                        <a ng-href="#/catalog-list" ng-show="results.role == 'admin'"><i class="fa fa-glass"></i> <span class="nav-label">TWS Catalog</span> </a>
                         <a ng-href="#/winespy"><i class="fa fa-arrow-circle-down"></i> <span class="nav-label">WineSpy</span></a>
                     </li>
                 </ul>
@@ -56,29 +56,29 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
     <script src="js/ui-bootstrap-tpls-2.2.0.min.js"></script>
     <!-- Mainly scripts -->
-    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
-    <script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <!--script src="js/plugins/metisMenu/jquery.metisMenu.js"></script-->
+    <script async src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <!-- Flot -->
     <!--script src="js/plugins/flot/jquery.flot.js"></script>
-<script src="js/plugins/flot/jquery.flot.tooltip.min.js"></script>
-<script src="js/plugins/flot/jquery.flot.spline.js"></script>
-<script src="js/plugins/flot/jquery.flot.resize.js"></script>
-<script src="js/plugins/flot/jquery.flot.pie.js"></script>
-<!-- Peity -->
+    <script src="js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="js/plugins/flot/jquery.flot.spline.js"></script>
+    <script src="js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="js/plugins/flot/jquery.flot.pie.js"></script>
+    <!-- Peity -->
     <!--script src="js/plugins/peity/jquery.peity.min.js"></script>
-<script src="js/demo/peity-demo.js"></script>
-<!-- Custom and plugin javascript -->
-    <script src="js/inspinia.js"></script>
-    <script src="js/plugins/pace/pace.min.js"></script>
+    <script src="js/demo/peity-demo.js"></script>
+    <!-- Custom and plugin javascript -->
+    <!--script src="js/inspinia.js"></script-->
+    <!--script async src="js/plugins/pace/pace.min.js"></script>
     <!-- jQuery UI -->
     <script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- GITTER -->
-    <script src="js/plugins/gritter/jquery.gritter.min.js"></script>
+    <script async src="js/plugins/gritter/jquery.gritter.min.js"></script>
     <!-- Sparkline -->
     <script src="js/plugins/sparkline/jquery.sparkline.min.js"></script>
     <!-- Sparkline demo data  -->
     <!--script src="js/demo/sparkline-demo.js"></script>
-<!-- ChartJS-->
+    <!-- ChartJS-->
     <script src="js/plugins/chartJs/Chart.min.js"></script>
     <!--script src="js/demo/chartjs-demo.js"></script>
     <!-- Toastr -->

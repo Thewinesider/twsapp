@@ -1,46 +1,46 @@
 <div class="gray-bg">
     <div class="middle-box text-center loginscreen animated fadeInDown">
         <div class="logo"></div>
-        <h3>Fill the form to create an account</h3>
+        <h3>Compila il form per creare un account</h3>
         <form name="signupForm" class="form-horizontal" role="form">
             <div class="form-group">
-                <input type="text" class="form-control form-inline" placeholder="Nome" ng-model="signup.name" />
+                <input type="text" class="form-control form-inline" placeholder="Nome" ng-model="signup.name" focus/>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control form-inline" placeholder="Cognome" ng-model="signup.surname" />
             </div>
-            <div class="form-group">
+            <!--div class="form-group">
                 <input type="text" class="form-control" placeholder="Ruolo" ng-model="signup.role" />
-            </div>
+            </div-->
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Ristorante" ng-model="signup.restaurant" />
             </div>
-            <div class="form-group">
+            <!--div class="form-group">
                 <input type="text" class="form-control" placeholder="Address" ng-model="signup.address" />
-            </div>
+            </div-->
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Email" name="email" ng-model="signup.email" focus/>
-                <span ng-show="signupForm.email.$error.email" class="help-inline">Email is not valid</span> 
+                <input type="text" class="form-control" placeholder="Email" name="email" ng-model="signup.email"/>
+                <span ng-show="signupForm.email.$error.email" class="help-inline">Email non valida</span> 
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" name = "password" placeholder="Password" ng-model="signup.password" required/>
-                <small class="errorMessage" data-ng-show="signupForm.password.$dirty && signupForm.password.$invalid"> Enter Password.</small>
+                <small class="errorMessage" data-ng-show="signupForm.password.$dirty && signupForm.password.$invalid"> Inserisci la password</small>
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" name="password2" placeholder="Password Again" ng-model="signup.password2" password-match="signup.password" required/>                                
-                <small class="errorMessage" data-ng-show="signupForm.password2.$dirty && signupForm.password2.$error.required"> Enter password again.</small>
-                <small class="errorMessage" data-ng-show="signupForm.password2.$dirty && signupForm.password2.$error.passwordNoMatch && !signupForm.password2.$error.required"> Password do not match.</small>
+                <small class="errorMessage" data-ng-show="signupForm.password2.$dirty && signupForm.password2.$error.required"> Inserisci di nuovo la password</small>
+                <small class="errorMessage" data-ng-show="signupForm.password2.$dirty && signupForm.password2.$error.passwordNoMatch && !signupForm.password2.$error.required"> Le password non corrispondono.</small>
             </div>
-            <div class="form-group">
+            <!--div class="form-group">
                 <input type="text" class="form-control" placeholder="Phone" name="phone" ng-model="signup.phone"/>
-            </div>
+            </div-->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary block full-width m-b" ng-click="signUp(signup)" data-ng-disabled="signupForm.$invalid">
-                    Sign Up
+                    Registrati
                 </button>
             </div>
             <div>
-                Already have an account? <a href="#/login">Sign In</a>
+                Hai già un account? <a href="#/login">Login</a>
             </div>
         </form>
         <p class="m-t"> 
