@@ -54,7 +54,7 @@ app.config(['$routeProvider',
         Data.get('session').then(function (results) {
             if (results.uid) {
                 $rootScope.authenticated = true;
-                //$location.path("/dashboard");
+                $rootScope.role = results.role;
             } else {
                 var nextUrl = next.$$route.originalPath;
                 if (nextUrl == '/signup') {

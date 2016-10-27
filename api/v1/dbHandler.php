@@ -81,6 +81,7 @@ class DbHandler {
             $sess["uid"] = $_SESSION['uid'];
             $sess["name"] = $_SESSION['name'];
             $sess["email"] = $_SESSION['email'];
+            $sess["role"] = $_SESSION['role'];
         }
         else
         {
@@ -100,6 +101,7 @@ class DbHandler {
             unset($_SESSION['uid']);
             unset($_SESSION['name']);
             unset($_SESSION['email']);
+            unset($_SESSION['role']);
             $info='info';
             if(isSet($_COOKIE[$info]))
             {

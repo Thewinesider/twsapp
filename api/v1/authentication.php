@@ -1,4 +1,6 @@
 <?php 
+
+/* Set a new session */
 $app->get('/session', function() {
     $db = new DbHandler();
     $session = $db->getSession();
@@ -7,31 +9,40 @@ $app->get('/session', function() {
     $response["name"] = $session['name'];
     echoResponse(200, $session);
 });
+
+/* Get the logged user winelist*/
 $app->get('/getWineList', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
     $wines= $db->getRecord("SELECT winelist.sku, catalog.type, winelist.name, catalog.description, catalog.producer, catalog.alcohol, catalog.region  FROM winelist,catalog WHERE id_user = ". $session['uid'] . " AND catalog.sku = winelist.sku");
-    //echo "SELECT * FROM winelist,catalog WHERE id_user = " . $session['uid'] . " AND catalog.sku = winelist.sku";
     echoResponse(200, $wines);
 });
-$app->get('/getFullWineList', function() use ($app) {
+
+/* Get the full catalog from the DB */
+$app->get('/getFullCatalog', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
     $wines= $db->getRecord("SELECT * FROM catalog WHERE catalog_in = 1");
     echoResponse(200, $wines);
 });
+
+/* Get the full producer list */
 $app->get('/getProducerList', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
     $producer= $db->getRecord("SELECT DISTINCT producer FROM catalog");
     echoResponse(200, $producer);
 });
+
+/* Get the full region list from the DB */
 $app->get('/getRegionList', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
     $region = $db->getRecord("SELECT DISTINCT region FROM catalog");
     echoResponse(200, $region);
 });
+
+/* Download a specific wine with a specific quantity */
 $app->post('/downloadWine', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
@@ -42,6 +53,8 @@ $app->post('/downloadWine', function() use ($app) {
     $wines = $db->execQuery($query);
     echoResponse(200, $wines);
 });
+
+/* LOGIN */
 $app->post('/login', function() use ($app) {
     require_once 'passwordHash.php';
     $r = json_decode($app->request->getBody());
@@ -66,6 +79,7 @@ $app->post('/login', function() use ($app) {
             $_SESSION['uid'] = $user['uid'];
             $_SESSION['email'] = $email;
             $_SESSION['name'] = $user['name'];
+            $_SESSION['role'] = $user['role'];
         } else {
             $response['status'] = "error";
             $response['message'] = 'Login failed. Incorrect credentials';
@@ -76,6 +90,8 @@ $app->post('/login', function() use ($app) {
     }
     echoResponse(200, $response);
 });
+
+/* SignUp a new user */
 $app->post('/signUp', function() use ($app) {
     $response = array();
     $r = json_decode($app->request->getBody());
@@ -119,6 +135,8 @@ $app->post('/signUp', function() use ($app) {
         echoResponse(201, $response);
     }
 });
+
+/* Logout */
 $app->get('/logout', function() {
     $db = new DbHandler();
     $session = $db->destroySession();
