@@ -52,7 +52,7 @@
     <!-- ChartJS-->
     <script src="app/js/plugins/chartJs/Chart.min.js"></script>
     <!-- Toastr -->
-    <script src="js/toaster.js"></script>
+    <script src="app/js/toaster.js"></script>
     <script src="app/app.js"></script>
     <script src="app/data.js"></script>
     <script src="app/directives.js"></script>

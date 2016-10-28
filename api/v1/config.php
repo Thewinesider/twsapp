@@ -1,6 +1,6 @@
 <?php
 
-$path = "prod";
+$path = "heroku";
 
 if($path=="local") {
     define('DB_USERNAME', 'root');
