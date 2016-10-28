@@ -12,7 +12,6 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
         }).then(function (results) {
             Data.toast(results);
             if (results.status == "success") {
-                $scope.user = results;
                 $location.path('winespy');
             }
         });
@@ -79,6 +78,22 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
         });
     }
 
+    /* 
+    *   Get all the wines downloaded from yesterday to today
+    *   @params {none}
+    */
+    $scope.getWineDownloaded = function (when) {
+        if(when=='yesterday') {
+            Data.get('getWineYesterday').then(function (results) {
+                $scope.ywines = results;
+            });
+        }else{
+            Data.get('getWineToday').then(function (results) {
+                $scope.twines = results;
+            });
+        }
+    }
+
     $scope.closeMenu = function () {
         $("body").toggleClass("mini-navbar");
         SmoothlyMenu();
@@ -113,7 +128,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
 
 app.controller('modalCtrl', function($scope, $http, $uibModal, Data, $location) { 
     $scope.value = 1;
-    
+
     /* 
     *   Open a new modal for downloading a wine
     *   @params {string} the modale size
@@ -130,22 +145,22 @@ app.controller('modalCtrl', function($scope, $http, $uibModal, Data, $location) 
             scope: $modalScope
         });
     };
-    
+
     /* dismissing a modal */
     $scope.dismissModal = function() {
         $scope.modalInstance.close();
     }
-    
+
     $scope.addWine = function () {
         $scope.value += 1;
     }
-    
+
     $scope.removeWine = function() {
         if($scope.value - 1 > 0) {
             $scope.value -= 1;
         }
     }
-    
+
     /* 
     *   Download operation of a specific wine
     *   @params {string} the SKU

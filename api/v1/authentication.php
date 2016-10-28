@@ -42,14 +42,36 @@ $app->get('/getRegionList', function() use ($app) {
     echoResponse(200, $region);
 });
 
+/* Get the wines downloaded between yesterday and today */
+$app->get('/getWineYesterday', function() use ($app) {
+    $db = new DbHandler();
+    $session = $db->getSession();
+    $r = json_decode($app->request->getBody());
+    $today = date("Y-m-d h:i:s", strtotime('12:00:00'));
+    $yesterday = date("Y-m-d h:i:s", strtotime('-1 day', strtotime('12:00:00')));
+    $query = "SELECT SUM(winesold.value) AS value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$yesterday."' AND date <= '".$today."' AND winesold.sku = winelist.sku GROUP BY winelist.name";
+    $wines = $db->getRecord($query);
+    echoResponse(200, $wines);
+});
+
+/* Get the wines downloaded between today */
+$app->get('/getWineToday', function() use ($app) {
+    $db = new DbHandler();
+    $session = $db->getSession();
+    $today = date("Y-m-d h:i:s", strtotime('12:00:00'));
+    $tomorrow = date("Y-m-d h:i:s", strtotime('+1 day', strtotime('12:00:00')));
+    $query = "SELECT SUM(winesold.value) AS value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$today."' AND date <= '".$tomorrow."' AND winesold.sku = winelist.sku GROUP BY winelist.name";
+    $wines = $db->getRecord($query);
+    echoResponse(200, $wines);
+});
+
 /* Download a specific wine with a specific quantity */
 $app->post('/downloadWine', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
     $post =  json_decode($app->request()->getBody());
-    $now = date("Y-m-d h:i:s", strtotime("now"));
+    $now = date("Y-m-d H:i:s", strtotime("now"));
     $query= "INSERT INTO winesold (date,value,id_winelist,sku) VALUES ('" . $now . "', " . $post->value . ", " . $session['uid'] . ", '" . $post->sku . "')";
-    error_log($query);
     $wines = $db->execQuery($query);
     echoResponse(200, $wines);
 });
@@ -100,7 +122,7 @@ $app->post('/signUp', function() use ($app) {
     $db = new DbHandler();
     $name = $r->customer->name;
     $surname = $r->customer->surname;
-    $role =  "";
+    $role =  "customer";
     $restaurant = $r->customer->restaurant;
     $address =  "";
     $email = $r->customer->email;

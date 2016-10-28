@@ -17,8 +17,8 @@
                 </li>
             </ul>
         </nav>
-        <div ng-init="getWineList()">
-            <div class="container-fluid">
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-12 text-align-center">
                 <div class="row">
                     <div class="wines-btn-group col-md-12 hidden-xs">
                         <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="''">Tutti i vini</label>
@@ -30,6 +30,18 @@
                         <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'dolce'">Vini dolci</label>
                     </div>
                 </div>
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <a href="#/winespy"><strong>Scarica i vini che hai venduto</strong></a>
+                    </li>
+                    <li>
+                        <a href="#/lastwine">Visualizza gli ultimi vini scaricati</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div ng-init="getWineList()">
+            <div class="container-fluid animated fadeInRight">
                 <div class="row">
                     <div class="col-sm-4 col-md-3" ng-repeat = "wine in wines | orderBy: 'region' | filter:filterModel">
                         <div ng-controller="modalCtrl" class="btn-wine white-bg" ng-click="open('md',wine.name,wine.sku)">

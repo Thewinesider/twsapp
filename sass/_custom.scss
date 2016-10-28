@@ -149,6 +149,11 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
 .wines-btn-group {
     text-align: center;
     margin-bottom: 10px;
+    margin-top: 10px;
+    .btn {
+        font-size: 18px;
+        text-transform: uppercase;
+    }
 }
 
 .italic {
@@ -161,6 +166,18 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
 
 .uppercase {
     text-transform: uppercase;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.font-size-25 {
+    font-size: 25px;
+}
+
+.line-height-3 {
+    line-height: 3;
 }
 
 .label-Bianco {
@@ -187,10 +204,9 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
     }
 }
 
-.wines-btn-group {
-    .btn {
-        font-size: 18px;
-        text-transform: uppercase;
+#wineDownload {
+    label {
+        cursor: pointer;
     }
 }
 

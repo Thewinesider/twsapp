@@ -1,0 +1,84 @@
+<div id="page-wrapper" class="gray-bg">
+    <div class="row border-bottom">
+        <nav class="navbar navbar-static-top" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary" ng-click="closeMenu()"><i class="fa fa-bars"></i> </a>
+            </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li>
+                    <span class="m-r-sm text-muted welcome-message">
+                        Welcome to The Winesider
+                    </span>
+                </li>
+                <li>
+                    <a ng-click="logout()">
+                        <i class="fa fa-sign-out"></i> Log out
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-12 text-align-center">
+            <h2>I VINI CHE HAI GIA' SCARICATO</h2>
+            <ol class="breadcrumb">
+                <li class="active">
+                    <a href="#/winespy">Scarica i vini che hai venduto</a>
+                </li>
+                <li>
+                    <a href="#/lastwine"><strong>Visualizza gli ultimi vini scaricati</strong></a>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <!-- YESTERDAY -->
+        <div class="col-md-6">
+            <div class="ibox" ng-init="getWineDownloaded('yesterday')">
+                <div class="ibox-content">
+                    <h2>SCARICATI IERI</h2>
+                    <p class="small"><i class="fa fa-glass"></i> Include tutti i vini scaricati <strong>entro le 12.00</strong> di oggi.</p>
+                    <ul class="agile-list" id="inprogress">
+                        <li class="success-element" ng-repeat="wine in ywines">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label class="font-size-25">{{wine.value}}</label>
+                                </div>
+                                <div class="col-md-6 line-height-3">
+                                    {{wine.name}}
+                                </div>
+                                <div class="col-md-5 line-height-3">
+                                    <i class="fa fa-clock-o"></i> {{wine.date}}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- TODAY -->
+        <div class="col-md-6">
+            <div class="ibox" ng-init="getWineDownloaded('today')">
+                <div class="ibox-content">
+                    <h2>SCARICATI OGGI</h2>
+                    <p class="small"><i class="fa fa-glass"></i> Include tutti i vini scaricati <strong>dopo le 12.00</strong> di oggi</p>
+                    <ul class="agile-list" id="inprogress">
+                        <li class="success-element" ng-repeat="wine in twines">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label class="font-size-25">{{wine.value}}</label>
+                                </div>
+                                <div class="col-md-6 line-height-3">
+                                    {{wine.name}}
+                                </div>
+                                <div class="col-md-5 line-height-3">
+                                    <i class="fa fa-clock-o"></i> {{wine.date}}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

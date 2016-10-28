@@ -5,20 +5,20 @@
                 <p>{{wineName}}</p>
             </div>
             <div class="col-md-3">
-                <button class="btn-addremove"  ng-click="removeWine()"> - </button>
+                <label class="btn-addremove"  ng-click="removeWine()"> - </label>
             </div>
             <div class="col-md-6">
                 <input type="text" ng-value="value" disabled>
             </div>
             <div class="col-md-3">
-                <button class="btn-addremove" ng-click="addWine()"> + </button>
+                <label class="btn-addremove" ng-click="addWine()"> + </label>
             </div>
         </div>
         <div>
-            <button class="btn btn-primary green" type="button" ng-click="addWineSpy(wineSKU,value)">OK</button>          
+            <button class="btn btn-primary green" type="button" ng-click="addWineSpy(wineSKU,value)">CONFERMA</button>          
         </div>
         <div>
-            <a ng-click="dismissModal()">CLOSE</a>
+            <a ng-click="dismissModal()">CHIUDI</a>
         </div>
     </div>
 </div>
