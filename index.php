@@ -1,4 +1,3 @@
-<? echo "prova" ?>
 <!DOCTYPE html>
 <html lang="en" ng-app="twsApp">
     <head>
