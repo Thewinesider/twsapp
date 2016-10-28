@@ -39,8 +39,8 @@ app.config(['$routeProvider',
                     controller: 'twsCtrl'
                 })
                     .when('/', {
-                    title: 'Login',
-                    templateUrl: 'partials/login.html',
+                    title: 'WineSpy',
+                    templateUrl: 'partials/winespy.html',
                     controller: 'twsCtrl',
                     role: '0'
                 })

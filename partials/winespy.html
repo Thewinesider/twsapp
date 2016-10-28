@@ -21,19 +21,20 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="wines-btn-group col-md-12 hidden-xs">
-                        <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="''">Tutti</label>
+                        <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="''">Tutti i vini</label>
                         <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'Bianco'">Bianco</label>
                         <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'Rosso'">Rosso</label>
                         <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'Bollicine'">Bollicine</label>
-                        <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'Rosato'">Rosato</label>
+                        <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'Rosato'">Rosati</label>
                         <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'Champagne'">Champagne</label>
-                        <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'dolce'">Vino dolce</label>
+                        <label class="btn btn-primary" ng-model="filterModel" uib-btn-radio="'dolce'">Vini dolci</label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-4 col-md-3" ng-repeat = "wine in wines | filter:filterModel">
-                        <div ng-controller="modalCtrl" class="btn-wine border-bottom white-bg" ng-click="open('md',wine.name,wine.sku)">
-                            <div>{{wine.name}}</div>
+                    <div class="col-sm-4 col-md-3" ng-repeat = "wine in wines | orderBy: 'region' | filter:filterModel">
+                        <div ng-controller="modalCtrl" class="btn-wine white-bg" ng-click="open('md',wine.name,wine.sku)">
+                            <div class="italic">{{wine.region}}</div>
+                            <div class="bold uppercase">{{wine.name}}</div>
                         </div>
                     </div>
                 </div>

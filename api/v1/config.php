@@ -1,6 +1,6 @@
 <?php
 
-$path = "heroku";
+$path = "staging";
 
 if($path=="local") {
     define('DB_USERNAME', 'root');

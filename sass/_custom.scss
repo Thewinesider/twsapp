@@ -75,12 +75,13 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
     cursor: pointer;
     text-align: center;
     font-size: 100%;
+    border: 1px solid $navy;
     &:hover {
-        background: $navy-opacity;
+        background: #eee;
     }
     div {
         position: relative;
-        top: 33px;
+        top: 27px;
     }
 }
 
@@ -147,8 +148,19 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
 
 .wines-btn-group {
     text-align: center;
-    margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.uppercase {
+    text-transform: uppercase;
 }
 
 .label-Bianco {
@@ -172,6 +184,13 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
 .label {
     &.dolce {
         background: #D7B257;   
+    }
+}
+
+.wines-btn-group {
+    .btn {
+        font-size: 18px;
+        text-transform: uppercase;
     }
 }
 
