@@ -49,7 +49,7 @@ $app->get('/getWineYesterday', function() use ($app) {
     $r = json_decode($app->request->getBody());
     $today = date("Y-m-d h:i:s", strtotime('12:00:00'));
     $yesterday = date("Y-m-d h:i:s", strtotime('-1 day', strtotime('12:00:00')));
-    $query = "SELECT SUM(winesold.value) AS value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$yesterday."' AND date <= '".$today."' AND winesold.sku = winelist.sku GROUP BY winelist.name";
+    $query = "SELECT winesold.value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$yesterday."' AND date <= '".$today."' AND winesold.sku = winelist.sku";
     $wines = $db->getRecord($query);
     echoResponse(200, $wines);
 });
@@ -60,7 +60,8 @@ $app->get('/getWineToday', function() use ($app) {
     $session = $db->getSession();
     $today = date("Y-m-d h:i:s", strtotime('12:00:00'));
     $tomorrow = date("Y-m-d h:i:s", strtotime('+1 day', strtotime('12:00:00')));
-    $query = "SELECT SUM(winesold.value) AS value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$today."' AND date <= '".$tomorrow."' AND winesold.sku = winelist.sku GROUP BY winelist.name";
+    $query = "SELECT winesold.value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$today."' AND date <= '".$tomorrow."' AND winesold.sku = winelist.sku";
+    //echo $query;
     $wines = $db->getRecord($query);
     echoResponse(200, $wines);
 });
