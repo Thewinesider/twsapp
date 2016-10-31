@@ -61,9 +61,9 @@ $app->get('/getWineToday', function() use ($app) {
     $today = date("Y-m-d h:i:s", strtotime('12:00:00'));
     $tomorrow = date("Y-m-d h:i:s", strtotime('+1 day', strtotime('12:00:00')));
     $query = "SELECT winesold.value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$today."' AND date <= '".$tomorrow."' AND winesold.sku = winelist.sku";
-    //echo $query;
-    $wines = $db->getRecord($query);
-    echoResponse(200, $wines);
+    echo $query;
+    //$wines = $db->getRecord($query);
+    //echoResponse(200, $wines);
 });
 
 /* Download a specific wine with a specific quantity */
