@@ -1,4 +1,4 @@
-app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location, $http, Data) {
+app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location, $http, Data, moment) {
     $scope.login = {};
     $scope.signup = {};
 
@@ -76,28 +76,205 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
             Data.toast(results);
             $location.path('login');
         });
-    }
+    };
 
+    /* 
+    *   Get the daily wine sold from the logged user 
+    */ 
+    $scope.getWineSoldDaily = function () {
+        /* MOMENTJS PERIOD TO BE DEFINED */
+        var data;
+        Data.post('getWineSoldDaily', {
+            periodStart: $scope.periodStart,
+            periodEnd: $scope.periodEnd,
+        }).then(function (results){
+            $scope.period = _.keys(_.omit(results[0], 'total'));
+            $scope.value = _.values(_.omit(results[0], 'total'));
+            $scope.totalBottle = results[0].total;
+            $scope.drawChart($scope.period, $scope.value);
+        });
+        Data.post('getWineSoldList', {
+            periodStart: $scope.periodStart,
+            periodEnd: $scope.periodEnd,
+        }).then(function(results){
+            $scope.wines = results;
+        });
+    };
+
+    /* 
+    *   Get the last week of sale from the logged user 
+    */ 
+    $scope.getWineSoldLastWeek = function () {
+        $scope.periodStart = new moment().subtract(1, 'weeks').startOf('isoWeek').format("YYYY-MM-DD 12:00:00");
+        $scope.periodEnd = new moment().subtract(1, 'weeks').endOf('isoWeek').add(1, 'day').format("YYYY-MM-DD 12:00:00");
+        Data.post('getWineSoldWeekly', {
+            periodStart: $scope.periodStart,
+            periodEnd: $scope.periodEnd,
+        }).then(function (results){
+            $scope.period = _.keys(_.omit(results[0], 'total'));
+            $scope.value = _.values(_.omit(results[0], 'total'));
+            $scope.totalBottle = results[0].total;
+            $scope.drawChart($scope.period, $scope.value);
+        });
+        Data.post('getWineSoldList', {
+            periodStart: $scope.periodStart,
+            periodEnd: $scope.periodEnd,
+        }).then(function(results){
+            $scope.wines = results;
+        });
+    };
+
+    /* 
+    *   Get this week of sales from the logged user 
+    */ 
+    $scope.getWineSoldThisWeek = function () {
+        $scope.periodStart = new moment().startOf('isoWeek').format("YYYY-MM-DD 12:00:00");
+        $scope.periodEnd = new moment().endOf('isoWeek').add(1, 'day').format("YYYY-MM-DD 12:00:00");
+        Data.post('getWineSoldWeekly', {
+            periodStart: $scope.periodStart,
+            periodEnd: $scope.periodEnd,
+        }).then(function (results){
+            $scope.period = _.keys(_.omit(results['bottles'][0], 'total'));
+            $scope.bottles = _.values(_.omit(results['bottles'][0], 'total'));
+            $scope.revenue = _.values(_.omit(results['revenue'][0], 'total'));
+            $scope.totalBottle = results['bottles'][0].total;
+            $scope.totalRevenue = results['revenue'][0].total;
+            $scope.wines = results['wines'];
+            $scope.typeValue = _.pluck(results['type'], 'sold');
+            $scope.typeNames = _.pluck(results['type'], 'type');
+            $scope.drawChartMix("#main", "bar", "line", $scope.period, $scope.bottles, $scope.revenue);
+            $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
+        });
+    };
+
+    /* 
+    *   Get the daily wine sold from the logged user 
+    */ 
+    $scope.getWineSoldMonthly = function () {
+        $scope.periodStart = new moment().startOf('month').format("YYYY-MM-DD 12:00:00");
+        $scope.periodEnd = new moment().endOf('month').add(1, 'day').format("YYYY-MM-DD 12:00:00");
+        Data.post('getWineSoldMonthly', {
+            periodStart: $scope.periodStart,
+            periodEnd: $scope.periodEnd,
+        }).then(function (results){
+            $scope.period = _.keys(_.omit(results['bottles'][0], 'total'));
+            $scope.bottles = _.values(_.omit(results['bottles'][0], 'total'));
+            $scope.revenue = _.values(_.omit(results['revenue'][0], 'total'));
+            $scope.totalBottle = results['bottles'][0].total;
+            $scope.totalRevenue = results['revenue'][0].total;
+            $scope.wines = results['wines'];
+            $scope.typeValue = _.pluck(results['type'], 'sold');
+            $scope.typeNames = _.pluck(results['type'], 'type');
+            $scope.drawChartMix("#main", "bar", "line", $scope.period, $scope.bottles, $scope.revenue);
+            $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
+        });
+    };
+
+    /* 
+    *   Get the daily wine sold from the logged user 
+    */ 
+    $scope.getWineSoldYearly = function () {
+        $scope.periodStart = new moment().startOf('year').format("YYYY-MM-DD 12:00:00");
+        $scope.periodEnd = new moment().endOf('year').add(1, 'day').format("YYYY-MM-DD 12:00:00");
+        Data.post('getWineSoldYearly', {
+             periodStart: $scope.periodStart,
+            periodEnd: $scope.periodEnd,
+        }).then(function (results){
+            $scope.period = _.keys(_.omit(results['bottles'][0], 'total'));
+            $scope.bottles = _.values(_.omit(results['bottles'][0], 'total'));
+            $scope.revenue = _.values(_.omit(results['revenue'][0], 'total'));
+            $scope.totalBottle = results['bottles'][0].total;
+            $scope.totalRevenue = results['revenue'][0].total;
+            $scope.wines = results['wines'];
+            $scope.typeValue = _.pluck(results['type'], 'sold');
+            $scope.typeNames = _.pluck(results['type'], 'type');
+            $scope.drawChartMix("#main", "bar", "line", $scope.period, $scope.bottles, $scope.revenue);
+            $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
+        });
+    };
+
+    $scope.drawChartMix = function (id, type1, type2, labels, data1, data2) {
+        var ctx = $(id);
+        var myChart = new Chart(ctx, {
+            type: type1,
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: type1,
+                        label: 'Bottiglie vendute',
+                        data: data1,
+                        backgroundColor: 'rgba(137,84,106,0.5)',
+                        borderColor: 'rgba(137,84,106,1)',
+                        borderWidth: 1
+                    },
+                    {
+                        type: type2,
+                        label: 'Fatturato',
+                        backgroundColor: 'transparent',
+                        borderColor: '#1ab394',
+                        data: data2,
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+    };
+
+    $scope.drawChartSingle = function (id, type, labels, data) {
+        var ctx = $(id);
+        var myChart = new Chart(ctx, {
+            type: type,
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Tipologia vino',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(44, 32, 40, 0.8)',
+                            'rgba(86, 81, 98, 0.8)',
+                            'rgba(79, 45, 72, 0.8)',
+                            'rgba(198, 188, 196, 0.8)',
+                            'rgba(128, 98, 141, 0.8)'
+                        ],
+                        borderColor: 'white',
+                        borderWidth: 1
+                    }
+                ]
+            }
+        });
+    };
+
+    
     /* 
     *   Get all the wines downloaded from yesterday to today
     *   @params {none}
     */
     $scope.getWineDownloaded = function (when) {
         if(when=='yesterday') {
-            Data.get('getWineYesterday').then(function (results) {
+            Data.get('getWineSoldYesterday').then(function (results) {
                 $scope.ywines = results;
             });
         }else{
-            Data.get('getWineToday').then(function (results) {
+            Data.get('getWineSoldToday').then(function (results) {
                 $scope.twines = results;
             });
         }
-    }
+    };
 
     $scope.closeMenu = function () {
         $("body").toggleClass("mini-navbar");
         SmoothlyMenu();
-    }
+    };
 
     function SmoothlyMenu() {
         if (!$('body').hasClass('mini-navbar') || $('body').hasClass('body-small')) {

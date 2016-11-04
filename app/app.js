@@ -1,4 +1,4 @@
-var app = angular.module('twsApp', ['ngRoute', 'ngAnimate', 'toaster', 'ngTouch', 'ui.bootstrap']);
+var app = angular.module('twsApp', ['ngRoute', 'ngAnimate', 'toaster', 'ngTouch', 'ui.bootstrap', 'angularMoment']);
 
 app.config(['$routeProvider',
             function ($routeProvider) {
