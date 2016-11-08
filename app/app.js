@@ -1,4 +1,4 @@
-var app = angular.module('twsApp', ['ngRoute', 'ngAnimate', 'toaster', 'ngTouch', 'ui.bootstrap', 'angularMoment']);
+var app = angular.module('twsApp', ['ngRoute', 'ngAnimate', 'toaster', 'ngTouch', 'ui.bootstrap', 'angularMoment', 'daterangepicker']);
 
 app.config(['$routeProvider',
             function ($routeProvider) {
@@ -60,6 +60,7 @@ app.config(['$routeProvider',
             if (results.uid) {
                 $rootScope.authenticated = true;
                 $rootScope.role = results.role;
+                $rootScope.uid = results.uid;
             } else {
                 var nextUrl = next.$$route.originalPath;
                 if (nextUrl == '/signup') {

@@ -18,7 +18,20 @@
             </ul>
         </nav>
     </div>
-    <div class="wrapper wrapper-content animated fadeInRight" ng-init="getWineSoldThisWeek()">
+    <div class="wrapper wrapper-content animated fadeInRight" ng-init="getWineSold(uid,7)">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label class="control-label" for="product_name">Filtra ristoranti</label>
+                        <select name="status" id="status" class="form-control" ng-init="getUsers('admin')" ng-model="useruid" ng-change="getWineSold(useruid,7)">
+                            <option value="" selected>Tutti</option>
+                            <option ng-repeat="user in users" ng-value="user.uid" >{{user.restaurant}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox float-e-margins">
@@ -26,21 +39,20 @@
                         <div>
                             <div class="pull-right">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-xs btn-white" ng-click="getWineSoldThisWeek()">Settimana</button>
-                                    <button type="button" class="btn btn-xs btn-white" ng-click="getWineSoldMonthly()">Mese</button>
-                                    <button type="button" class="btn btn-xs btn-white" ng-click="getWineSoldYearly()">Anno</button>
-                                    <button type="button" class="btn btn-xs btn-white" ng-click="getWineSoldYearly()">Personalizza</button>
+                                    <!--input date-range-picker class="form-control date-picker" options="opts" type="text" ng-model="datePicker.date"/-->
+                                    <button type="button" class="btn btn-xs btn-white" ng-click="getWineSold(uid,-7)">Scorsa Settimana</button>
+                                    <button type="button" class="btn btn-xs btn-white" ng-click="getWineSold(uid,7)">Questa Settimana</button>
+                                    <button type="button" class="btn btn-xs btn-white" ng-click="getWineSold(uid,30)">Questo Mese</button>
+                                    <button type="button" class="btn btn-xs btn-white" ng-click="getWineSold(uid,365)">Quest Anno</button>
+                                    <!--button type="button" class="btn btn-xs btn-white" ng-click="getWineSold(useruid)">Applica</button-->
                                 </div>
                             </div>
-                            <h1 class="m-b-xs"># {{totalBottle}}</h1>
-                            <h3 class="font-bold no-margins">
-                                Bottiglie vendute
-                            </h3>
-                            <small>Dal <strong>{{periodStart}}</strong> al <strong>{{periodEnd}}</strong></small>
+                            <h1 class="m-b-xs">Panoramica generale</h1> 
+                            <small>Da <strong>{{rangeStart}}</strong> a <strong>{{rangeEnd}}</strong></small>
                         </div>
 
-                        <div>
-                            <canvas id="main" height="70"></canvas>
+                        <div id="wineGraph-wrapper">
+                            <canvas id="wineGraph" height="70"></canvas>
                         </div>
 
                         <div class="m-t-md">
@@ -54,18 +66,20 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-4">
+            <div ng-class="role == 'admin' ? 'col-lg-3' : 'col-lg-4'">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <span class="label label-primary pull-right">Prodotti</span>
                         <h5>Dettaglio</h5>
                     </div>
                     <div class="ibox-content">
+                        <h1 class="no-margins"># {{totalBottle | number}}</h1>
+                        <small>Totale Bottiglie vendute</small>
                         <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
                             <thead>
                                 <tr>
                                     <th>Nome</th>
-                                    <th>Totale Venduto</th>
+                                    <th>Venduto</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,7 +88,7 @@
                                         {{wine.name}}
                                     </td>
                                     <td>
-                                        {{wine.sold}}
+                                        {{wine.sold | number}}
                                     </td>
                                 </tr>
                             </tbody>
@@ -82,27 +96,76 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div ng-class="role == 'admin' ? 'col-lg-3' : 'col-lg-4'" ng-show="role == 'admin'">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-info pull-right">Tipologia</span>
-                        <h5>Dettaglio</h5>
+                        <span class="label label-warning pull-right">Dettaglio</span>
+                        <h5>Fatturato The Winesider</h5>
                     </div>
                     <div class="ibox-content">
-                        <canvas id="wineType" height="200"></canvas>
+                        <h1 class="no-margins">&euro; {{totalRevenueTws | number}}</h1>
+                        <small>Totale Fatturato</small>
+                        <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Fatturato</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="wine in wines" >
+                                    <td>
+                                        {{wine.name}}
+                                    </td>
+                                    <td>
+                                        &euro; {{wine.revenueTws | number}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
+            <div ng-class="role == 'admin' ? 'col-lg-3' : 'col-lg-4'">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-warning pull-right">Annual</span>
-                        <h5>Income</h5>
+                        <span class="label label-warning pull-right">Dettaglio</span>
+                        <h5>Fatturato Ristorante</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">$ 120 430,800</h1>
-                        <div class="stat-percent font-bold text-warning">16% <i class="fa fa-level-up"></i></div>
-                        <small>New orders</small>
+                        <h1 class="no-margins">&euro; {{totalRevenue | number}}</h1>
+                        <small>Totale Fatturato</small>
+                        <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Fatturato</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="wine in wines" >
+                                    <td>
+                                        {{wine.name}}
+                                    </td>
+                                    <td>
+                                        &euro; {{wine.revenue | number}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div ng-class="role == 'admin' ? 'col-lg-3' : 'col-lg-4'">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-info pull-right">Tipologia</span>
+                        <h5>Dettaglio bottiglie vendute</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div>
+                            <canvas id="wineType" height="200"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
