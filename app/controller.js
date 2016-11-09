@@ -58,15 +58,11 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
     *   @params {none}
     *   @return {json} the wine list
     */
-    $scope.getFullCatalog = function() {
+    $scope.getInfo = function() {
         Data.get('getProducerList').then(function (results) {
-            $scope.producers = results;
-        });
-        Data.get('getRegionList').then(function (results) {
-            $scope.regions = results;
-        });
-        Data.get('getFullCatalog').then(function (results) {
-            $scope.wines = results;
+            $scope.producers = results['producers'];
+            $scope.regions = results['regions'];
+            $scope.wines = results['wines'];
         });
     };
 
@@ -151,7 +147,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
             if($scope.myChart){
                 $scope.myChart.destroy();
             };
-            if($rootScope.role = "admin") {
+            if($rootScope.role == "admin") {
                 $scope.drawChartMix("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenueTws);
             }else{
                 $scope.drawChartMix("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenue);

@@ -12,6 +12,7 @@
         <link href="stylesheets/style.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="stylesheets/daterangepicker.css"/>
+        <link rel="icon" sizes="192x192" href="img/icon-highres.png">
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]><link href= "css/bootstrap-theme.css" rel= "stylesheet" >
 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -30,7 +31,7 @@
                         </div>
                     </li>
                     <li class="active">
-                        <a ng-href="#/dashboard" ng-show="role == 'admin' || role == 'demo'"><i class="fa fa-line-chart"></i> <span class="nav-label">Statistiche</span> </a>
+                        <a ng-href="#/dashboard"><i class="fa fa-line-chart"></i> <span class="nav-label">Statistiche</span> </a>
                         <a ng-href="#/catalog-list" ng-show="role == 'admin' || role == 'demo'"><i class="fa fa-list-ol"></i> <span class="nav-label">Il nostro catalogo</span> </a>
                         <a ng-href="#/winespy"><i class="fa fa-arrow-circle-down"></i> <span class="nav-label">WineSpy</span></a>
                     </li>

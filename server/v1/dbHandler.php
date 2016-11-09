@@ -87,6 +87,7 @@ class DbHandler {
             $sess["uid"] = '';
             $sess["name"] = 'Guest';
             $sess["email"] = '';
+            $sess["role"] = 'Guest';
         }
         return $sess;
     }

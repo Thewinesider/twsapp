@@ -54,7 +54,7 @@ $app->get('/session', function() {
     $response["uid"] = $session['uid'];
     $response["email"] = $session['email'];
     $response["name"] = $session['name'];
-    $response['role'] = $session['role'];
+    $response["role"] = $session['role'];
     echoResponse(200, $session);
 });
 
@@ -90,7 +90,7 @@ $app->get('/getRegionList', function() use ($app) {
     echoResponse(200, $region);
 });
 
-/* Get the full region list from the DB */
+/* Get the user list from the DB */
 $app->post('/getUserList', function() use ($app) {
     $db = new DbHandler();
     $user = json_decode($app->request->getBody());
@@ -152,7 +152,7 @@ $app->post('/getWineSoldWeekly', function() use ($app) {
     $session = $db->getSession();
     $data = json_decode($app->request->getBody());
     if(isset($data->uid) && $data->uid== 0 || !isset($data->uid)) { // all user
-        $subquery = "AND winesold.id_winelist = winelist.id_user";
+        $subquery = "AND winesold.id_winelist = winelist.id_user AND winesold.id_winelist <> 1";
     }elseif(isset($data->uid)){ //specific user
         $subquery = "AND winesold.id_winelist = ". $data->uid ." AND winelist.id_user = ". $data->uid ."";
     }
@@ -221,7 +221,7 @@ $app->post('/getWineSoldMonthly', function() use ($app) {
     $session = $db->getSession();
     $data = json_decode($app->request->getBody());
     if(isset($data->uid) && $data->uid== 0 || !isset($data->uid)) { // all user
-        $subquery = "AND winesold.id_winelist = winelist.id_user";
+        $subquery = "AND winesold.id_winelist = winelist.id_user AND winesold.id_winelist <> 1";
     }elseif(isset($data->uid)){ //specific user
         $subquery = "AND winesold.id_winelist = ". $data->uid ." AND winelist.id_user = ". $data->uid ."";
     }else{ //logged user
@@ -293,7 +293,7 @@ $app->post('/getWineSoldYearly', function() use ($app) {
     $session = $db->getSession();
     $data = json_decode($app->request->getBody());
     if(isset($data->uid) && $data->uid== 0 || !isset($data->uid)) { // all user
-        $subquery = "AND winesold.id_winelist = winelist.id_user";
+        $subquery = "AND winesold.id_winelist = winelist.id_user AND winesold.id_winelist <> 1";
     }elseif(isset($data->uid)){ //specific user
         $subquery = "AND winesold.id_winelist = ". $data->uid ." AND winelist.id_user = ". $data->uid ."";
     }else{ //logged user
@@ -360,7 +360,7 @@ $app->post('/getWineSoldYearly', function() use ($app) {
         $revenueTws = $db->getRecord($query);
     }
 
-    $query = "SELECT winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.suggested_price) as revenue FROM winesold, winelist WHERE winelist.sku = winesold.sku ". $subquery ."  AND winesold.date >= '". $data->periodStart ."' AND winesold.date <= '". $data->periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
+    $query = "SELECT winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.suggested_price) as revenue, (SUM(winesold.value)*winelist.price) as revenueTws FROM winesold, winelist WHERE winelist.sku = winesold.sku ". $subquery ."  AND winesold.date >= '". $data->periodStart ."' AND winesold.date <= '". $data->periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
     $wines = $db->getRecord($query);
 
     $query = "SELECT SUM(winesold.value) as sold, catalog.type as type FROM winesold, winelist, catalog WHERE winelist.sku = winesold.sku AND catalog.SKU = winelist.SKU ". $subquery ."  AND winesold.date >= '". $data->periodStart ."' AND winesold.date <= '". $data->periodEnd ."' GROUP BY catalog.type";
