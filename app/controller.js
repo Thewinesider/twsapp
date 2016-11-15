@@ -106,6 +106,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
     */ 
     $scope.getWineSold = function (uid, range) {
         $scope.uid = uid;
+        alert("UID "+$scope.uid)
         /*var rangeStart = $scope.datePicker.date["startDate"];
         var rangeEnd = $scope.datePicker.date["endDate"];
         var range = rangeEnd.diff(rangeStart, 'day');*/
