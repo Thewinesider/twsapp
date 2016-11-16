@@ -32,8 +32,10 @@
                     </li>
                     <li class="active">
                         <a ng-href="#/dashboard"><i class="fa fa-line-chart"></i> <span class="nav-label">Statistiche</span> </a>
-                        <a ng-href="#/catalog-list" ng-show="role == 'admin' || role == 'demo'"><i class="fa fa-list-ol"></i> <span class="nav-label">Il nostro catalogo</span> </a>
+                        <a ng-href="#/admin"><i class="fa fa-line-app"></i> <span class="nav-label">Statistiche</span> </a>
+                        <!--a ng-href="#/catalog-list" ng-show="role == 'admin' || role == 'demo'"><i class="fa fa-list-ol"></i> <span class="nav-label">Il nostro catalogo</span> </a-->
                         <a ng-href="#/winespy"><i class="fa fa-arrow-circle-down"></i> <span class="nav-label">WineSpy</span></a>
+                        <a ng-click="logout()"><i class="fa fa-sign-out"></i><span class="nav-label"> Log out</span></a>
                     </li>
                 </ul>
             </div>

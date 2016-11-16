@@ -13,8 +13,8 @@ app.factory("Data", ['$http', 'toaster',
             toaster.pop("success", "", message, 3000, 'trustedHtml');
         }
         
-        obj.get = function (q) {
-            return $http.get(serviceBase + q).then(function (results) {
+        obj.get = function (q, params) {
+            return $http.get(serviceBase + q, {params: params}).then(function (results) {
                 return results.data;
             });
         };

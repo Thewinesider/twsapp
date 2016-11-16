@@ -103,13 +103,55 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
 
     /* 
     *   Get this week of sales from the logged user or from a specific user
-    */ 
+    */
+
     $scope.getWineSold = function (uid, range) {
         $scope.uid = uid;
-        alert("UID "+$scope.uid)
-        /*var rangeStart = $scope.datePicker.date["startDate"];
+        $scope.rangeStart = "2016-01-01 12:00:00";
+        $scope.rangeEnd = "2016-11-12 12:00:00";
+        Data.get('getWineSoldList', {
+            periodStart: $scope.rangeStart,
+            periodEnd: $scope.rangeEnd,
+            uid: $scope.uid,
+        }).then(function (results){
+            //Setting scope values
+            console.log(JSON.stringify(results));
+           /* $scope.period = _.keys(_.omit(results['bottles'][0], 'total'));
+            $scope.bottles = _.values(_.omit(results['bottles'][0], 'total'));
+            $scope.revenue = _.values(_.omit(results['revenue'][0], 'total'));
+            $scope.revenueTws = _.values(_.omit(results['revenueTws'][0], 'total'));*/
+            $scope.totalBottle = results['totals'][0].sold;
+            $scope.totalRevenue = results['totals'][0].total_restaurants;
+            $scope.totalRevenueTws = results['totals'][0].total_revenues;
+            $scope.wines = results['wines'];
+            $scope.data = results['data'];
+            $scope.period = _.pluck(results['data'], 'days');
+            $scope.bottles = _.pluck(results['data'], 'total_sales');
+            $scope.revenueTws = _.pluck(results['data'], 'total_revenues');
+            $scope.revenue = _.pluck(results['data'], 'total_restaurants');
+            $scope.typeValue = _.pluck(results['wineType'], 'sold');
+            $scope.typeNames = _.pluck(results['wineType'], 'type');
+            //drawing charts
+            if($scope.myChart){
+                $scope.myChart.destroy();
+            };
+            if($rootScope.role == "admin") {
+                $scope.drawChartMix("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenueTws);
+            }else{
+                $scope.drawChartMix("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenue);
+            }
+            $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
+        });
+    };
+
+    /* 
+    *   Get this week of sales from the logged user or from a specific user
+    *
+    $scope.getWineSold = function (uid, range) {
+        $scope.uid = uid;
+        var rangeStart = $scope.datePicker.date["startDate"];
         var rangeEnd = $scope.datePicker.date["endDate"];
-        var range = rangeEnd.diff(rangeStart, 'day');*/
+        var range = rangeEnd.diff(rangeStart, 'day');
         if(range == 7){
             $apiToCall = 'getWineSoldWeekly';
             $scope.rangeStart = moment().startOf('isoWeek').format("YYYY-MM-DD 12:00:00");
@@ -155,7 +197,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
             }
             $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
         });
-    };
+    };*/ 
 
 
     $scope.drawChartMix = function (id, type1, type2, labels, data1, data2) {

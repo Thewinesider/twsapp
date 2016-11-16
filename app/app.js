@@ -23,6 +23,11 @@ app.config(['$routeProvider',
                     templateUrl: 'partials/dashboard.html',
                     controller: 'twsCtrl'
                 })
+                 .when('/admin', {
+                    title: 'Admin wine list',
+                    templateUrl: 'partials/admin.html',
+                    controller: 'twsCtrl'
+                })
                     .when('/catalog-list', {
                     title: 'Catalog List',
                     templateUrl: 'partials/catalog-list.html',

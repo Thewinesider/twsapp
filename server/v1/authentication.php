@@ -24,25 +24,30 @@ SELECT MONTH(winesold.date), SUM(winesold.value) as sold FROM winesold, winelist
 QUERY DIVISIONE SOMMA BOTTIGLIE VENDUTE PER ANNO
 SELECT YEAR(winesold.date), SUM(winesold.value) as sold FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 1 AND winelist.id_user = 1 GROUP BY YEAR(winesold.date)
 
-SELECT 
-    SUM(IF(period = 0, sold, 0)) AS 'Lunedì',
-    SUM(IF(period = 1, sold, 0)) AS 'Martedì',
-    SUM(IF(period = 2, sold, 0)) AS 'Mercoledì',
-    SUM(IF(period = 3, sold, 0)) AS 'Giovedì',
-    SUM(IF(period = 4, sold, 0)) AS 'Venerdì',
-    SUM(IF(period = 5, sold, 0)) AS 'Sabato',
-    SUM(IF(period = 6, sold, 0)) AS 'Domenica',
-    SUM(sold) AS total
-    FROM (
-        SELECT SUM(winesold.value) as sold, WEEKDAY(winesold.date) as period FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 1 AND winelist.id_user = 1 AND winesold.date >= '2016-10-31 12:00:00' AND winesold.date <= '2016-11-07 12:00:00' GROUP BY WEEKDAY(winesold.date)
-    ) AS SubTable1
+grouped by sku
 
-SELECT DATE_FORMAT(calendar.datefield,'%a, %b %e') AS datedays,
-       IFNULL(SUM(winesold.value),0) AS total_sales
-FROM winelist, winesold RIGHT JOIN calendar ON (DATE(winesold.date) = calendar.datefield)
-WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE(date)) FROM winesold) AND (SELECT MAX(DATE(date)) FROM winesold)) AND winelist.sku = winesold.sku
-GROUP BY datedays 
-ORDER BY datedays DESC
+SELECT winesold.sku, winelist.name, SUM(winesold.value) as sold, winelist.price as price,  winelist.suggested_price as suggested_price, DATE_FORMAT(winesold.date, '%e %b') as date, HOUR(winesold.date) as hour FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '2016-11-01 12:00:00' AND winesold.date <= '2016-11-13 12:00:00' GROUP BY winesold.sku ORDER BY sold DESC
+
+groupped by date
+
+SELECT SUM(winesold.value) as sold, SUM(winelist.price) as price, SUM(winelist.suggested_price) as suggested_price, DATE_FORMAT(winesold.date, '%e %b') as date 
+FROM winesold, winelist
+WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '2016-10-01 12:00:00' AND winesold.date <= '2016-11-13 12:00:00' GROUP BY DATE_FORMAT(winesold.date, '%e %b') ORDER BY DATE_FORMAT(winesold.date, '%e %b') ASC
+
+GROUPPED BY DATE IF NULL 0
+
+SELECT DATE_FORMAT(cl.datefield, '%e %b') as days, IFNULL(SUM(ws.value),0) AS total_sales, IFNULL(SUM(wl.price),0) AS total_revenues, IFNULL(SUM(wl.suggested_price),0) AS total_restaurants
+
+FROM winesold ws 
+INNER JOIN winelist wl ON ws.sku = wl.sku AND wl.id_user = ws.id_winelist
+RIGHT JOIN calendar cl ON (DATE(ws.date) = cl.datefield) AND ws.id_winelist = 15
+
+
+WHERE cl.datefield BETWEEN (DATE('2016-10-01 12:00:00')) AND (DATE('2016-11-13 12:00:00'))
+
+GROUP BY DATE(cl.datefield)
+ORDER BY DATE(cl.datefield) ASC
+
 
 */
 
@@ -99,13 +104,34 @@ $app->post('/getUserList', function() use ($app) {
 });
 
 /* Get the full list of wine sold in a certain period */
-$app->post('/getWineSoldList', function() use ($app) {
+$app->get('/getWineSoldList', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
-    $period = json_decode($app->request->getBody());
-    $query = "SELECT winelist.name,SUM(winesold.value) as sold FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = ". $session["uid"] ." AND winelist.id_user = ". $session["uid"] ." AND winesold.date >= '". $period->periodStart ."' AND winesold.date <= '". $period->periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
-    $wines = $db->getRecord($query);
-    echoResponse(200, $wines);
+    $periodStart = $app->request->get("periodStart");
+    $periodEnd = $app->request->get("periodEnd");
+    $uid = $app->request->get("uid");
+    
+    $query = "SELECT winesold.sku, winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants, DATE(winesold.date) as date, HOUR(winesold.date) as hour FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
+    $response["wines"] = $db->getRecord($query);
+    
+    $query = "
+    SELECT DATE_FORMAT(cl.datefield, '%e %b') as days, IFNULL(SUM(ws.value),0) AS total_sales, IFNULL((SUM(ws.value)*wl.price),0) AS total_revenues, IFNULL((SUM(ws.value)*wl.suggested_price),0) AS total_restaurants
+    FROM winesold ws 
+    INNER JOIN winelist wl ON ws.sku = wl.sku AND wl.id_user = ws.id_winelist
+    RIGHT JOIN calendar cl ON (DATE(ws.date) = cl.datefield) AND ws.id_winelist = 15
+    WHERE cl.datefield BETWEEN (DATE('". $periodStart ."')) AND (DATE('". $periodEnd ."'))
+    GROUP BY DATE(cl.datefield)
+    ORDER BY DATE(cl.datefield) ASC";
+    $response["data"] = $db->getRecord($query);
+    
+    $query = "SELECT SUM(winesold.value) as sold, catalog.type as type FROM winesold, winelist, catalog WHERE winelist.sku = winesold.sku AND catalog.SKU = winelist.SKU  AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY catalog.type";
+    $response["wineType"] = $db->getRecord($query);
+    
+    $query = "SELECT SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants
+    FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."'";
+    $response["totals"] = $db->getRecord($query);    
+    
+    echoResponse(200, $response);
 });    
 
 /* Get the wine sold with hour aggregation */

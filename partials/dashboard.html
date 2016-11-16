@@ -1,23 +1,4 @@
 <div id="page-wrapper" class="gray-bg">
-    <div class="row border-bottom">
-        <nav class="navbar navbar-static-top" role="navigation">
-            <div class="navbar-header">
-                <a class="navbar-minimalize minimalize-styl-2 btn btn-primary" ng-click="closeMenu()"><i class="fa fa-bars"></i> </a>
-            </div>
-            <ul class="nav navbar-top-links navbar-right">
-                <li>
-                    <span class="m-r-sm text-muted welcome-message">
-                        Welcome to The Winesider
-                    </span>
-                </li>
-                <li>
-                    <a ng-click="logout()">
-                        <i class="fa fa-sign-out"></i> Log out
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
     <div class="wrapper wrapper-content animated fadeInRight" ng-init="getWineSold(uid,7)">
         <div class="row" ng-show="role == 'demo'">
             <div class="col-md-12">
@@ -82,7 +63,7 @@
                         <h5>Dettaglio</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"># {{totalBottle | number}}</h1>
+                        <h1 class="no-margins">{{totalBottle | number}}</h1>
                         <small>Totale Bottiglie vendute</small>
                         <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
                             <thead>
@@ -127,7 +108,7 @@
                                         {{wine.name}}
                                     </td>
                                     <td>
-                                        &euro; {{wine.revenueTws | number}}
+                                        &euro; {{wine.total_revenues | number}}
                                     </td>
                                 </tr>
                             </tbody>
@@ -157,7 +138,7 @@
                                         {{wine.name}}
                                     </td>
                                     <td>
-                                        &euro; {{wine.revenue | number}}
+                                        &euro; {{wine.total_restaurants | number}}
                                     </td>
                                 </tr>
                             </tbody>
