@@ -40,7 +40,9 @@
                 </ul>
             </div>
         </nav>
+        
         <div data-ng-view="" id="ng-view" class="tws-color"></div>
+        
     </body>
     
     <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>

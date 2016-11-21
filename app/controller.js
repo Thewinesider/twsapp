@@ -1,21 +1,23 @@
-app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location, $http, Data, moment) {
-    $scope.datePicker = {};
-    $scope.datePicker.date = {
-        startDate: null,
-        endDate: null
+app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $location, $http, Data, moment) {
+    $scope.date = {
+        startDate: moment().startOf('isoWeek').format("YYYY-MM-DD 12:00:00"),
+        endDate: moment().endOf('isoWeek').format("YYYY-MM-DD 00:00:00")
     };
     $scope.opts = {
-        ranges: {
+        "autoApply": true,
+        "ranges": {
+            'Scorsa settimana': [moment().startOf('isoWeek').subtract(7, 'day').format("YYYY-MM-DD 12:00:00"), moment().endOf('isoWeek').subtract(6, 'day').format("YYYY-MM-DD 12:00:00")],
             'Questa settimana': [moment().startOf('isoWeek').format("YYYY-MM-DD 12:00:00"), moment().endOf('isoWeek').add(1, 'day').format("YYYY-MM-DD 12:00:00")],
+            'Scorso mese': [moment().startOf('month').subtract(1, 'month').format("YYYY-MM-DD 12:00:00"), moment().endOf('month').subtract(1, 'month').add(2, 'day').format("YYYY-MM-DD 12:00:00")],
             'Questo mese': [moment().startOf('month').format("YYYY-MM-DD 12:00:00"), moment().endOf('month').add(1, 'day').format("YYYY-MM-DD 12:00:00")],
-            'Quest anno': [moment().startOf('year').format("YYYY-MM-DD 12:00:00"), moment().endOf('year').add(1, 'day').format("YYYY-MM-DD 12:00:00")],
+            'Quest\'anno': [moment().startOf('year').format("YYYY-MM-DD 12:00:00"), moment().endOf('year').add(1, 'day').format("YYYY-MM-DD 12:00:00")]
         },
-        timePicker: true,
-        timePickerIncrement: 30,
-        showCustomRangeLabel: false,
-        alwaysShowCalendars: false,
-        autoApply: true,
-        locale: {
+        "timePicker": true,
+        "timePickerIncrement": 30,
+        "showCustomRangeLabel": false,
+        "alwaysShowCalendars": true,
+        "opens": "left",
+        "locale": {
             format: 'YYYY-MM-DD h:mm:ss'
         }
     };
@@ -104,22 +106,17 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
     /* 
     *   Get this week of sales from the logged user or from a specific user
     */
-
-    $scope.getWineSold = function (uid, range) {
+    $scope.getWineSold = function (uid) {
         $scope.uid = uid;
-        $scope.rangeStart = "2016-01-01 12:00:00";
-        $scope.rangeEnd = "2016-11-12 12:00:00";
+        $scope.rangeStart = $filter('date')($scope.date["startDate"], "yyyy-MM-DD hh:mm:ss");
+        $scope.rangeEnd = $filter('date')($scope.date["endDate"], "yyyy-MM-DD hh:mm:ss");
+        alert(JSON.stringify($scope.rangeStart + " " + $scope.rangeEnd));
         Data.get('getWineSoldList', {
             periodStart: $scope.rangeStart,
             periodEnd: $scope.rangeEnd,
             uid: $scope.uid,
         }).then(function (results){
             //Setting scope values
-            console.log(JSON.stringify(results));
-           /* $scope.period = _.keys(_.omit(results['bottles'][0], 'total'));
-            $scope.bottles = _.values(_.omit(results['bottles'][0], 'total'));
-            $scope.revenue = _.values(_.omit(results['revenue'][0], 'total'));
-            $scope.revenueTws = _.values(_.omit(results['revenueTws'][0], 'total'));*/
             $scope.totalBottle = results['totals'][0].sold;
             $scope.totalRevenue = results['totals'][0].total_restaurants;
             $scope.totalRevenueTws = results['totals'][0].total_revenues;
@@ -231,7 +228,8 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $location,
                             beginAtZero:true
                         }
                     }]
-                }
+                },
+                tension: 0
             }
         });
     };

@@ -34,11 +34,6 @@ angular.module('toaster', ['ngAnimate'])
     'limit': 0,                   // limits max number of toasts 
     'tap-to-dismiss': true,
     'newest-on-top': true,
-    //'fade-in': 1000,            // done in css
-    //'on-fade-in': undefined,    // not implemented
-    //'fade-out': 1000,           // done in css
-    // 'on-fade-out': undefined,  // not implemented
-    //'extended-time-out': 1000,    // not implemented
     'time-out': 5000, // Set timeOut and extendedTimeout to 0 to make it sticky
     'icon-classes': {
         error: 'toast-error',
@@ -48,6 +43,9 @@ angular.module('toaster', ['ngAnimate'])
     },
     'body-output-type': '', // Options: '', 'trustedHtml', 'template'
     'body-template': 'toasterBodyTmpl.html',
+    "closeButton": true,
+    "debug": false,
+    "progressBar": true,
     'icon-class': 'toast-info',
     'position-class': 'toast-top-right',
     'title-class': 'toast-title',
