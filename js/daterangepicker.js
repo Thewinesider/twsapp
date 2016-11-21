@@ -36,7 +36,7 @@
         this.minDate = false;
         this.maxDate = false;
         this.dateLimit = false;
-        this.autoApply = false;
+        this.autoApply = true;
         this.singleDatePicker = false;
         this.showDropdowns = false;
         this.showWeekNumbers = false;
@@ -361,7 +361,7 @@
 
         //can't be used together for now
         if (this.timePicker && this.autoApply)
-            this.autoApply = false;
+            this.autoApply = true;
 
         if (this.autoApply && typeof options.ranges !== 'object') {
             this.container.find('.ranges').hide();

@@ -210,3 +210,14 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
     }
 }
 
+.applyBtn, .cancelBtn {
+    display: none;
+}
+
+.select-btn {
+    width: 285px;
+    border: 0px;
+    border-bottom: 2px solid #eee;
+    font-size: 17px;
+    text-align: center;
+}
