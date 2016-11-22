@@ -239,3 +239,7 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav li:hover>.nav-second
 .nav>li>a {
     color: #f1f1f1;
 }
+
+table.dataTable tbody td {
+    padding: 8px 18px!important;
+}

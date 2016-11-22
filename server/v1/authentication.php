@@ -105,7 +105,7 @@ $app->get('/wineSold', function() use ($app) {
         $q = " AND winesold.id_winelist = winelist.id_user AND winesold.id_winelist <> 1";
     }
     
-    $query = "SELECT winesold.sku AS sku, winelist.name AS name, SUM(winesold.value) AS sold, (SUM(winesold.value)*winelist.price) AS total_revenues, (SUM(winesold.value)*winelist.suggested_price) AS total_restaurants, DATE(winesold.date) AS date, HOUR(winesold.date) AS hour FROM winesold, winelist WHERE winelist.sku = winesold.sku". $q. " AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
+    $query = "SELECT catalog.type AS type, winesold.sku AS sku, winelist.name AS name, SUM(winesold.value) AS sold, (SUM(winesold.value)*winelist.price) AS total_revenues, (SUM(winesold.value)*winelist.suggested_price) AS total_restaurants, DATE(winesold.date) AS date, HOUR(winesold.date) AS hour FROM winesold, winelist, catalog WHERE winelist.sku = winesold.sku". $q. " AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' AND catalog.sku = winesold.sku GROUP BY winesold.sku ORDER BY sold DESC";
     $response["wines"] = $db->getRecord($query);
     
     echoResponse(200, $response);

@@ -37,11 +37,8 @@
                         <a><i class="fa fa-bar-chart"></i><span class="nav-label">Statistiche</span> </a>
                         <ul class="nav nav-second-level collapse">
                             <li><a ng-href="#/dashboard"><i class="fa fa-bar-chart"></i> Statistiche</a></li>
-                            <li><a ng-href="#/dashboard"><i class="fa fa-list-ul"></i> Dettaglio</a></li>
+                            <li><a ng-href="#/admin"><i class="fa fa-list-ul"></i> Dettaglio</a></li>
                         </ul>
-                    </li>
-                    <li>
-                        <a ng-href="#/admin" ng-show="role == 'admin'"><i class="fa fa-table"></i> <span class="nav-label">Admin</span> </a>
                     </li>
                     <li>
                         <a><i class="fa fa-book"></i> <span class="nav-label">Il nostro catalogo</span> </a>

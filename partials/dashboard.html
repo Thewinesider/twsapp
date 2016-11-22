@@ -50,97 +50,92 @@
             </div>
         </div>
         <div class="row">
-            <div ng-class="role == 'admin' ? 'col-lg-3' : 'col-lg-4'">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <span class="label label-primary pull-right">Prodotti</span>
-                        <h5>Dettaglio</h5>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div ng-class="role == 'admin' ? 'col-lg-4' : 'col-lg-6'">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Bottiglie vendute</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">{{totalBottle | number}}</h1>
+                                <small>Totale</small>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins">{{totalBottle | number}}</h1>
-                        <small>Totale Bottiglie vendute</small>
-                        <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Venduto</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="wine in wines" >
-                                    <td>
-                                        {{wine.name}}
-                                    </td>
-                                    <td>
-                                        {{wine.sold | number}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div ng-class="role == 'admin' ? 'col-lg-4' : 'col-lg-6'" ng-show="role == 'admin'">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Fatturato The Winesider</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">&euro; {{totalRevenueTws | number}}</h1>
+                                <small>Totale </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-class="role == 'admin' ? 'col-lg-4' : 'col-lg-6'">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Fatturato</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">&euro; {{totalRevenue | number}}</h1>
+                                <small>Totale</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Ricarico</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">{{averageMark | number: 1}}</h1>
+                                <small>Media</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Scontrino</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">&euro; {{averageSold}} </h1>
+                                <small>Media</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Vino più venduto</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">{{bestWine}}</h1>
+                                <small>Etichetta</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Categoria più venduta</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">{{bestWineType}}</h1>
+                                <small>Tipologia</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div ng-class="role == 'admin' ? 'col-lg-3' : 'col-lg-4'" ng-show="role == 'admin'">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <span class="label label-warning pull-right">Dettaglio</span>
-                        <h5>Fatturato The Winesider</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins">&euro; {{totalRevenueTws | number}}</h1>
-                        <small>Totale Fatturato</small>
-                        <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Fatturato</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="wine in wines" >
-                                    <td>
-                                        {{wine.name}}
-                                    </td>
-                                    <td>
-                                        &euro; {{wine.total_revenues | number}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div ng-class="role == 'admin' ? 'col-lg-3' : 'col-lg-4'">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <span class="label label-warning pull-right">Dettaglio</span>
-                        <h5>Fatturato Ristorante</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins">&euro; {{totalRevenue | number}}</h1>
-                        <small>Totale Fatturato</small>
-                        <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="15">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Fatturato</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="wine in wines" >
-                                    <td>
-                                        {{wine.name}}
-                                    </td>
-                                    <td>
-                                        &euro; {{wine.total_restaurants | number}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div ng-class="role == 'admin' ? 'col-lg-3' : 'col-lg-4'">
+            <div class="col-lg-4">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <span class="label label-info pull-right">Tipologia</span>

@@ -34,10 +34,17 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         });
     };
 
+    $scope.getUsers = function(role) {
+        Data.post('getUserList', {
+            role: role
+        }).then(function (results) {
+            $scope.users = results
+        });
+    }
+
+
     /* 
     *   Get the wine list of the logged user
-    *   @params {none}
-    *   @return {json} the wine list
     */
     $scope.getFullCatalogInfo = function () {
         Data.get('fullCatalogInfo').then(function (results) {
@@ -50,8 +57,6 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
 
     /* 
     *   Get the wine list of the logged user
-    *   @params {none}
-    *   @return {json} the wine list
     */
     $scope.getWineList = function () {
         Data.get('getProducerList').then(function (results) {
@@ -65,18 +70,8 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         });
     };
 
-    $scope.getUsers = function(role) {
-        Data.post('getUserList', {
-            role: role
-        }).then(function (results) {
-            $scope.users = results
-        });
-    }
-
     /* 
     *   Add a new user to the DB
-    *   @params {array}
-    *   @return true
     */
     $scope.signUp = function (customer) {
         Data.post('signUp', {
@@ -102,21 +97,30 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             uid: $scope.uid,
         }).then(function (results){
             //Setting scope values
+            console.log(JSON.stringify(results));
             if(results['totals'][0].sold == null){
                 $scope.totalBottle = 0;   
             }else{
                 $scope.totalBottle = results['totals'][0].sold;
             }    
-            if(results['totals'][0].sold == null){
+            if(results['totals'][0].total_restaurants == null){
                 $scope.totalRevenue = 0;
             }else{
                 $scope.totalRevenue = results['totals'][0].total_restaurants;
             }
-            if(results['totals'][0].sold == null){
+            if(results['totals'][0].total_revenues == null){
                 $scope.totalRevenueTws = 0;
             }else{
                 $scope.totalRevenueTws = results['totals'][0].total_revenues;
             }     
+            $scope.bestWine = _.max(results['wines'], function(wine){ return wine.sold; }).name;
+            if($scope.bestWine == null) $scope.bestWine = "Nessun dato";
+            $scope.bestWineType = _.max(results['wineType'], function(wine){ return wine.sold; }).type;
+            if($scope.bestWineType == null) $scope.bestWineType = "Nessun dato";
+            $scope.averageSold = $scope.totalRevenue / $scope.totalBottle ;
+            if(isNaN($scope.averageSold)) $scope.averageSold = 0;
+            $scope.averageMark = $scope.totalRevenue / $scope.totalRevenueTws;
+            if(isNaN($scope.averageMark)) $scope.averageMark = 0;
             $scope.wines = results['wines'];
             $scope.data = results['data'];
             $scope.period = _.pluck(results['data'], 'days');
@@ -160,12 +164,28 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             periodEnd: $scope.rangeEnd,
             uid: $scope.uid,
         }).then(function (results){   
+            console.log(JSON.stringify(results));
             if(range == 'yesterday'){
                 $scope.winesRange = results['wines'];
             }else{
                 $scope.wines = results['wines'];
             } 
         });
+        //define buttons
+        if($rootScope.role == 'admin'){
+            var btn =[
+                'colvis',
+                'copy',
+                'print',
+                'excel'
+            ];
+        }else{
+            var btn =[
+                'copy',
+                'print',
+                'excel'
+            ];
+        }
         //initialize the datatable
         $scope.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
             var defer = $q.defer();
@@ -174,16 +194,14 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         })
             .withPaginationType('full_numbers')
         // Active Buttons extension
-            .withButtons([
-            'colvis',
-            'copy',
-            'print',
-            'excel',
-        ]);
+            .withButtons(btn);
         $scope.dtColumns = [
             DTColumnBuilder.newColumn('sku').withTitle('SKU'),
             DTColumnBuilder.newColumn('name').withTitle('Nome vino'),
-            DTColumnBuilder.newColumn('sold').withTitle('Venduto')
+            DTColumnBuilder.newColumn('type').withTitle('Tipo'),
+            DTColumnBuilder.newColumn('sold').withTitle('Venduto'),
+            DTColumnBuilder.newColumn('revenue').withTitle('Fatturato'),
+            DTColumnBuilder.newColumn('revenueTWS').withTitle('Fatturato TWS')
         ];
     };
 
