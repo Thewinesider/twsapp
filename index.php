@@ -11,7 +11,10 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
         <link href="stylesheets/style.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="stylesheets/angular-datatables.css">
         <link rel="stylesheet" href="stylesheets/daterangepicker.css"/>
+        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" href="stylesheets/jquery.dataTables.min.css">
         <link rel="icon" sizes="192x192" href="img/icon-highres.png">
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]><link href= "css/bootstrap-theme.css" rel= "stylesheet" >
@@ -32,19 +35,19 @@
                     </li>
                     <li class="active">
                         <a ng-href="#/dashboard"><i class="fa fa-line-chart"></i> <span class="nav-label">Statistiche</span> </a>
-                        <a ng-href="#/admin"><i class="fa fa-line-app"></i> <span class="nav-label">Statistiche</span> </a>
-                        <!--a ng-href="#/catalog-list" ng-show="role == 'admin' || role == 'demo'"><i class="fa fa-list-ol"></i> <span class="nav-label">Il nostro catalogo</span> </a-->
+                        <a ng-href="#/admin" ng-show="role == 'admin'"><i class="fa fa-table"></i> <span class="nav-label">Admin</span> </a>
+
                         <a ng-href="#/winespy"><i class="fa fa-arrow-circle-down"></i> <span class="nav-label">WineSpy</span></a>
                         <a ng-click="logout()"><i class="fa fa-sign-out"></i><span class="nav-label"> Log out</span></a>
                     </li>
                 </ul>
             </div>
         </nav>
-        
+
         <div data-ng-view="" id="ng-view" class="tws-color"></div>
-        
+
     </body>
-    
+
     <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
 
     <!-- Jquery  -->
@@ -58,11 +61,20 @@
     <script async src="js/underscore.min.js"></script>
     <script type="text/javascript" src="js/chartjs-directive.js"></script>
     <!-- moment.js -->
-    <script src="js/node_modules/moment/moment.js"></script>
-    <script src="js/node_modules/angular-moment/angular-moment.js"></script>
+    <script src="js/moment/moment.js"></script>
+    <script src="js/angular-moment/angular-moment.js"></script>
     <!-- daterangepicker.js -->
     <script src="js/daterangepicker.js"></script>
     <script src="js/angular-daterangepicker.min.js"></script>
+    <!-- daterangepicker.js -->
+    <script src="js/datatables/jquery.dataTables.min.js"></script>
+    <script src="js/datatables/angular-datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <script src="js/datatables/angular-datatables.buttons.min.js"></script>
     <!-- Toastr -->
     <script src="js/toaster.js"></script>
     <!-- ANGULAR -->

@@ -221,3 +221,7 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
     font-size: 17px;
     text-align: center;
 }
+
+.dataTables_filter, .dataTables_paginate {
+    float: right;
+}

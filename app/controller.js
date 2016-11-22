@@ -1,8 +1,11 @@
-app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $location, $http, Data, moment) {
+app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $location, $http, Data, moment, DTOptionsBuilder, DTColumnBuilder) {
+
+
     $scope.date = {
         startDate: moment().startOf('isoWeek').format("YYYY-MM-DD 12:00:00"),
         endDate: moment().endOf('isoWeek').format("YYYY-MM-DD 00:00:00")
     };
+
     $scope.opts = {
         "autoApply": true,
         "timePicker": true,
@@ -86,30 +89,19 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     };
 
     /* 
-    *   Logout the user
-    *   @params {none}
-    */
-    $scope.logout = function () {
-        Data.get('logout').then(function (results) {
-            Data.toast(results);
-            $location.path('login');
-        });
-    };
-
-    /* 
     *   Get this week of sales from the logged user or from a specific user
     */
-    $scope.getWineSold = function (uid) {
+    $scope.getStatistics = function (uid) {
         $scope.uid = uid;
         $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
         $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
-        alert(JSON.stringify($scope.rangeStart + " " + $scope.rangeEnd));
-        Data.get('getWineSoldList', {
+        Data.get('statistics', {
             periodStart: $scope.rangeStart,
             periodEnd: $scope.rangeEnd,
             uid: $scope.uid,
         }).then(function (results){
             //Setting scope values
+            console.log(results);
             if(results['totals'][0].sold == null){
                 $scope.totalBottle = 0;   
             }else{
@@ -124,7 +116,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
                 $scope.totalRevenueTws = 0;
             }else{
                 $scope.totalRevenueTws = results['totals'][0].total_revenues;
-            }            
+            }     
             $scope.wines = results['wines'];
             $scope.data = results['data'];
             $scope.period = _.pluck(results['data'], 'days');
@@ -133,6 +125,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             $scope.revenue = _.pluck(results['data'], 'total_restaurants');
             $scope.typeValue = _.pluck(results['wineType'], 'sold');
             $scope.typeNames = _.pluck(results['wineType'], 'type');
+            console.log(JSON.stringify($scope.wines));
             //drawing charts
             if($scope.myChart){
                 $scope.myChart.destroy();
@@ -144,6 +137,40 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             }
             $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
         });
+    };
+
+    /* 
+    *   Get this week of sales from the logged user or from a specific user
+    */
+    $scope.getWineSold = function (uid) {
+        $scope.uid = uid;
+        $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
+        $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
+        Data.get('wineSold', {
+            periodStart: $scope.rangeStart,
+            periodEnd: $scope.rangeEnd,
+            uid: $scope.uid,
+        }).then(function (results){    
+            $scope.wines = results['wines'];
+        });
+        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
+            var defer = $q.defer();
+            defer.resolve($scope.wines);
+            return defer.promise;
+        })
+            .withPaginationType('full_numbers')
+        // Active Buttons extension
+            .withButtons([
+            'colvis',
+            'copy',
+            'print',
+            'excel',
+        ]);
+        $scope.dtColumns = [
+            DTColumnBuilder.newColumn('sku').withTitle('SKU'),
+            DTColumnBuilder.newColumn('name').withTitle('Nome vino'),
+            DTColumnBuilder.newColumn('sold').withTitle('Venduto')
+        ];
     };
 
 

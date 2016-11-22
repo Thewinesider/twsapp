@@ -1,4 +1,4 @@
-var app = angular.module('twsApp', ['ngRoute', 'ngAnimate', 'toaster', 'ngTouch', 'ui.bootstrap', 'angularMoment', 'daterangepicker']);
+var app = angular.module('twsApp', ['ngRoute', 'ngAnimate', 'toaster', 'ngTouch', 'ui.bootstrap', 'angularMoment', 'daterangepicker', 'datatables', 'datatables.buttons']);
 
 app.config(['$routeProvider',
             function ($routeProvider) {
@@ -23,7 +23,7 @@ app.config(['$routeProvider',
                     templateUrl: 'partials/dashboard.html',
                     controller: 'twsCtrl'
                 })
-                 .when('/admin', {
+                    .when('/admin', {
                     title: 'Admin wine list',
                     templateUrl: 'partials/admin.html',
                     controller: 'twsCtrl'
@@ -75,5 +75,16 @@ app.config(['$routeProvider',
                 }
             }
         });
+        
+        /* 
+        *   Logout the user
+        *   @params {none}
+        */
+        $rootScope.logout = function () {
+            Data.get('logout').then(function (results) {
+                Data.toast(results);
+                $location.path('login');
+            });
+        };
     });
 });

@@ -104,32 +104,60 @@ $app->post('/getUserList', function() use ($app) {
 });
 
 /* Get the full list of wine sold in a certain period */
-$app->get('/getWineSoldList', function() use ($app) {
+$app->get('/statistics', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
     $periodStart = $app->request->get("periodStart");
     $periodEnd = $app->request->get("periodEnd");
     $uid = $app->request->get("uid");
+    $q = "";
+    $qJoin = "";
+    if($uid != null) { //if 0 get all the records
+        $q = " AND winesold.id_winelist = " . $uid . " AND winelist.id_user = " . $uid . "";
+        $qJoin = " AND ws.id_winelist = " . $uid . " ";
+    }else{
+        $q = " AND winesold.id_winelist = winelist.id_user AND winesold.id_winelist <> 1";
+        $qJoin = " AND ws.id_winelist != 1 ";
+    }
     
-    $query = "SELECT winesold.sku, winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants, DATE(winesold.date) as date, HOUR(winesold.date) as hour FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
+    $query = "SELECT winesold.sku, winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants, DATE(winesold.date) as date, HOUR(winesold.date) as hour FROM winesold, winelist WHERE winelist.sku = winesold.sku". $q. " AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
     $response["wines"] = $db->getRecord($query);
     
-    $query = "
-    SELECT DATE_FORMAT(cl.datefield, '%e %b') as days, IFNULL(SUM(ws.value),0) AS total_sales, IFNULL((SUM(ws.value)*wl.price),0) AS total_revenues, IFNULL((SUM(ws.value)*wl.suggested_price),0) AS total_restaurants
-    FROM winesold ws 
-    INNER JOIN winelist wl ON ws.sku = wl.sku AND wl.id_user = ws.id_winelist
-    RIGHT JOIN calendar cl ON (DATE(ws.date) = cl.datefield) AND ws.id_winelist = 15
-    WHERE cl.datefield BETWEEN (DATE('". $periodStart ."')) AND (DATE('". $periodEnd ."'))
-    GROUP BY DATE(cl.datefield)
+    $query = "SELECT DATE_FORMAT(cl.datefield, '%e %b') as days, IFNULL(SUM(ws.value),0) AS total_sales, IFNULL((SUM(ws.value)*wl.price),0) AS total_revenues, IFNULL((SUM(ws.value)*wl.suggested_price),0) AS total_restaurants FROM winesold ws 
+    INNER JOIN winelist wl ON ws.sku = wl.sku AND wl.id_user = ws.id_winelist 
+    RIGHT JOIN calendar cl  ON (DATE(ws.date) = cl.datefield) " . $qJoin . " 
+    WHERE cl.datefield BETWEEN (DATE('". $periodStart ."')) AND (DATE('". $periodEnd ."')) 
+    GROUP BY DATE(cl.datefield) 
     ORDER BY DATE(cl.datefield) ASC";
+
     $response["data"] = $db->getRecord($query);
     
-    $query = "SELECT SUM(winesold.value) as sold, catalog.type as type FROM winesold, winelist, catalog WHERE winelist.sku = winesold.sku AND catalog.SKU = winelist.SKU  AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY catalog.type";
+    $query = "SELECT SUM(winesold.value) as sold, catalog.type as type FROM winesold, winelist, catalog WHERE winelist.sku = winesold.sku AND catalog.SKU = winelist.SKU". $q. "  AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY catalog.type";
     $response["wineType"] = $db->getRecord($query);
     
     $query = "SELECT SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants
-    FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."'";
+    FROM winesold, winelist WHERE winelist.sku = winesold.sku". $q. " AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."'";
     $response["totals"] = $db->getRecord($query);    
+    
+    echoResponse(200, $response);
+});   
+
+/* Get the full list of wine sold in a certain period */
+$app->get('/wineSold', function() use ($app) {
+    $db = new DbHandler();
+    $session = $db->getSession();
+    $periodStart = $app->request->get("periodStart");
+    $periodEnd = $app->request->get("periodEnd");
+    $uid = $app->request->get("uid");  
+    $q = "";
+    if($uid != null) { //if 0 get all the records
+        $q = " AND winesold.id_winelist = " . $uid . " AND winelist.id_user = " . $uid . "";
+    }else{
+        $q = " AND winesold.id_winelist = winelist.id_user AND winesold.id_winelist <> 1";
+    }
+    
+    $query = "SELECT winesold.sku, winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants, DATE(winesold.date) as date, HOUR(winesold.date) as hour FROM winesold, winelist WHERE winelist.sku = winesold.sku". $q. " AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
+    $response["wines"] = $db->getRecord($query);
     
     echoResponse(200, $response);
 });    
