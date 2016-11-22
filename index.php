@@ -33,11 +33,32 @@
                             TWS 
                         </div>
                     </li>
-                    <li class="active">
-                        <a ng-href="#/dashboard"><i class="fa fa-line-chart"></i> <span class="nav-label">Statistiche</span> </a>
+                    <li>
+                        <a><i class="fa fa-bar-chart"></i><span class="nav-label">Statistiche</span> </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a ng-href="#/dashboard"><i class="fa fa-bar-chart"></i> Statistiche</a></li>
+                            <li><a ng-href="#/dashboard"><i class="fa fa-list-ul"></i> Dettaglio</a></li>
+                        </ul>
+                    </li>
+                    <li>
                         <a ng-href="#/admin" ng-show="role == 'admin'"><i class="fa fa-table"></i> <span class="nav-label">Admin</span> </a>
-
-                        <a ng-href="#/winespy"><i class="fa fa-arrow-circle-down"></i> <span class="nav-label">WineSpy</span></a>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-book"></i> <span class="nav-label">Il nostro catalogo</span> </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a ng-href="#/catalog-list"><i class="fa fa-list"></i> Lista vini</a></li>
+                            <li><a ng-href="#/catalog-grid"><i class="fa fa-th"></i> Griglia vini</a></li>
+                            <!--li><a ng-href="#/catalog-grid"><i class="fa fa-pie-chart"></i> Overview vini</a></li-->
+                        </ul>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-tablet"></i> <span class="nav-label">WineSpy</span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a ng-href="#/winespy"><i class="fa fa-tablet"></i> Scarica venduto</a></li>
+                            <li><a ng-href="#/lastwine"><i class="fa fa-clock-o"></i> Vini scaricati</a></li>
+                        </ul>
+                    </li>
+                    <li>
                         <a ng-click="logout()"><i class="fa fa-sign-out"></i><span class="nav-label"> Log out</span></a>
                     </li>
                 </ul>
@@ -79,7 +100,7 @@
     <script src="js/toaster.js"></script>
     <!-- ANGULAR -->
     <script src="app/app.js"></script>
-    <script src="app/data.js"></script>
+    <script src="app/factory.js"></script>
     <script src="app/directives.js"></script>
     <script src="app/controller.js"></script>
     <script src="app/functions.js"></script>

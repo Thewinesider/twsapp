@@ -225,3 +225,17 @@ body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav-second-level {
 .dataTables_filter, .dataTables_paginate {
     float: right;
 }
+
+.nav{
+    &.nav-second-level {
+        min-width: 160px!important;   
+    }    
+} 
+
+body:not(.fixed-sidebar):not(.canvas-menu).mini-navbar .nav li:hover>.nav-second-level, .mini-navbar .nav li:focus>.nav-second-level {
+    min-width: 160px!important; 
+}
+
+.nav>li>a {
+    color: #f1f1f1;
+}

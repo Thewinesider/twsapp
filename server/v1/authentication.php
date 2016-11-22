@@ -1,57 +1,4 @@
 <?php 
-/*
-
-http://www.daterangepicker.com/
-
-QUERY
-
-QUERY DIVISIONE SOMMA BOTTIGLIE VENDUTE PER GIORNO E PER VINO
-
-SELECT winelist.sku, winelist.name, WEEKDAY(winesold.date), SUM(winesold.value) as sold FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 1 AND winelist.id_user = 1 GROUP BY DAY(winesold.date), winesold.sku
-
-QUERY DIVISIONE SOMMA BOTTIGLIE VENDUTE PER ORA IN UN DETERMINATO GIORNO
-SELECT HOUR(winesold.date), SUM(winesold.value) as sold FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 1 AND winelist.id_user = 1 AND date BETWEEN "2016-10-17 00:00:00" AND "2016-10-17 23:59:59" GROUP BY HOUR(winesold.date)
-
-QUERY DIVISIONE SOMMA BOTTIGLIE VENDUTE PER GIORNO
-SELECT WEEKDAY(winesold.date), SUM(winesold.value) as sold FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 1 AND winelist.id_user = 1 GROUP BY DAY(winesold.date)
-
-QUERY DIVISIONE SOMMA BOTTIGLIE VENDUTE PER SETTIMANA
-SELECT winelist.sku, winelist.name, WEEK(winesold.date), SUM(winesold.value) as sold FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 1 AND winelist.id_user = 1 GROUP BY WEEK(winesold.date)
-
-QUERY DIVISIONE SOMMA BOTTIGLIE VENDUTE PER MESE
-SELECT MONTH(winesold.date), SUM(winesold.value) as sold FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 1 AND winelist.id_user = 1 GROUP BY MONTH(winesold.date)
-
-QUERY DIVISIONE SOMMA BOTTIGLIE VENDUTE PER ANNO
-SELECT YEAR(winesold.date), SUM(winesold.value) as sold FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 1 AND winelist.id_user = 1 GROUP BY YEAR(winesold.date)
-
-grouped by sku
-
-SELECT winesold.sku, winelist.name, SUM(winesold.value) as sold, winelist.price as price,  winelist.suggested_price as suggested_price, DATE_FORMAT(winesold.date, '%e %b') as date, HOUR(winesold.date) as hour FROM winesold, winelist WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '2016-11-01 12:00:00' AND winesold.date <= '2016-11-13 12:00:00' GROUP BY winesold.sku ORDER BY sold DESC
-
-groupped by date
-
-SELECT SUM(winesold.value) as sold, SUM(winelist.price) as price, SUM(winelist.suggested_price) as suggested_price, DATE_FORMAT(winesold.date, '%e %b') as date 
-FROM winesold, winelist
-WHERE winelist.sku = winesold.sku AND winesold.id_winelist = 15 AND winelist.id_user = 15 AND winesold.date >= '2016-10-01 12:00:00' AND winesold.date <= '2016-11-13 12:00:00' GROUP BY DATE_FORMAT(winesold.date, '%e %b') ORDER BY DATE_FORMAT(winesold.date, '%e %b') ASC
-
-GROUPPED BY DATE IF NULL 0
-
-SELECT DATE_FORMAT(cl.datefield, '%e %b') as days, IFNULL(SUM(ws.value),0) AS total_sales, IFNULL(SUM(wl.price),0) AS total_revenues, IFNULL(SUM(wl.suggested_price),0) AS total_restaurants
-
-FROM winesold ws 
-INNER JOIN winelist wl ON ws.sku = wl.sku AND wl.id_user = ws.id_winelist
-RIGHT JOIN calendar cl ON (DATE(ws.date) = cl.datefield) AND ws.id_winelist = 15
-
-
-WHERE cl.datefield BETWEEN (DATE('2016-10-01 12:00:00')) AND (DATE('2016-11-13 12:00:00'))
-
-GROUP BY DATE(cl.datefield)
-ORDER BY DATE(cl.datefield) ASC
-
-
-*/
-
-
 /* Set a new session */
 $app->get('/session', function() {
     $db = new DbHandler();
@@ -72,11 +19,13 @@ $app->get('/getWineList', function() use ($app) {
 });
 
 /* Get the full catalog from the DB */
-$app->get('/getFullCatalog', function() use ($app) {
+$app->get('/fullCatalogInfo', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
-    $wines= $db->getRecord("SELECT * FROM catalog WHERE catalog_in = 1");
-    echoResponse(200, $wines);
+    $response["wines"]= $db->getRecord("SELECT * FROM catalog WHERE catalog_in = 1");
+    $response["producers"]= $db->getRecord("SELECT DISTINCT producer FROM catalog WHERE catalog_in = 1");
+    $response["regions"] = $db->getRecord("SELECT DISTINCT region FROM catalog WHERE catalog_in = 1");
+    echoResponse(200, $response);
 });
 
 /* Get the full producer list */
@@ -156,34 +105,11 @@ $app->get('/wineSold', function() use ($app) {
         $q = " AND winesold.id_winelist = winelist.id_user AND winesold.id_winelist <> 1";
     }
     
-    $query = "SELECT winesold.sku, winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants, DATE(winesold.date) as date, HOUR(winesold.date) as hour FROM winesold, winelist WHERE winelist.sku = winesold.sku". $q. " AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
+    $query = "SELECT winesold.sku AS sku, winelist.name AS name, SUM(winesold.value) AS sold, (SUM(winesold.value)*winelist.price) AS total_revenues, (SUM(winesold.value)*winelist.suggested_price) AS total_restaurants, DATE(winesold.date) AS date, HOUR(winesold.date) AS hour FROM winesold, winelist WHERE winelist.sku = winesold.sku". $q. " AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
     $response["wines"] = $db->getRecord($query);
     
     echoResponse(200, $response);
 });    
-
-/* Get the wines downloaded between yesterday and today */
-$app->get('/getWineSoldYesterday', function() use ($app) {
-    $db = new DbHandler();
-    $session = $db->getSession();
-    $r = json_decode($app->request->getBody());
-    $today = date("Y-m-d h:i:s", strtotime('12:00:00'));
-    $yesterday = date("Y-m-d h:i:s", strtotime('-1 day', strtotime('12:00:00')));
-    $query = "SELECT winesold.value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$yesterday."' AND date <= '".$today."' AND winesold.sku = winelist.sku GROUP BY winesold.date";
-    $wines = $db->getRecord($query);
-    echoResponse(200, $wines);
-});
-
-/* Get the wines downloaded today */
-$app->get('/getWineSoldToday', function() use ($app) {
-    $db = new DbHandler();
-    $session = $db->getSession();
-    $today = date("Y-m-d h:i:s", strtotime('12:00:00'));
-    $tomorrow = date("Y-m-d h:i:s", strtotime('+1 day', strtotime('12:00:00')));
-    $query = "SELECT winesold.value, winesold.date, winelist.name FROM winesold,winelist WHERE id_winelist = ".$session['uid']." AND date >= '".$today."' AND date <= '".$tomorrow."' AND winesold.sku = winelist.sku GROUP BY winesold.date";
-    $wines = $db->getRecord($query);
-    echoResponse(200, $wines);
-});
 
 /* Download a specific wine with a specific quantity */
 $app->post('/downloadWine', function() use ($app) {

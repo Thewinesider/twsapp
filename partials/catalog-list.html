@@ -1,11 +1,11 @@
 <div id="page-wrapper" class="gray-bg">
-    <div class="wrapper wrapper-content animated fadeInRight ecommerce">
+    <div class="wrapper wrapper-content animated fadeInRight ecommerce" ng-init="getFullCatalogInfo()">
         <div class="ibox-content m-b-sm border-bottom">
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label class="control-label" for="product_name">Cerca</label>
-                        <input ng-model="name.filterModel" type="text" id="product_name" name="product_name" ng-value="" placeholder="Product Name" class="form-control">
+                        <input ng-model="name.filterModel" type="text" id="product_name" name="product_name" ng-value="" placeholder="Criterio ricerca" class="form-control">
                     </div>
                 </div>
                 <div class="col-sm-3">
@@ -41,20 +41,8 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12 text-align-center">
-                    <ol class="breadcrumb">
-                        <li class="active">
-                            <a href="#/catalog-grid">Visualizza come griglia</a>
-                        </li>
-                        <li>
-                            <a href="#/catalog-list"><strong>Visualizza come lista</strong></a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
         </div>
-        <div class="row" ng-init="getFullCatalog()">
+        <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
                     <div class="ibox-content">
@@ -62,12 +50,11 @@
                             <thead>
                                 <tr>
                                     <th>Nome</th>
+                                    <th>Prezzo</th>
                                     <th>Tipo</th>
                                     <th>Produttore</th>
                                     <th>Regione</th>
                                     <th>Gradazione</th>
-                                    <!--th>Catalog</th>
-<!--th class="text-right" data-sort-ignore="true">Action</th-->
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,9 +62,9 @@
                                     <td>
                                         {{wine.description}}
                                     </td>
-                                    <!--td>
-$50.00
-</td-->
+                                    <td>
+                                        {{wine.price}}&euro;
+                                    </td>
                                     <td>
                                         <span class="label label-{{wine.type}}">{{wine.type}}</span>
                                     </td>
@@ -90,12 +77,6 @@ $50.00
                                     <td>
                                         {{wine.alcohol}}&deg;
                                     </td>
-                                    <!--td class="text-right">
-<div class="btn-group">
-<button class="btn-white btn btn-xs">View</button>
-<button class="btn-white btn btn-xs">Edit</button>
-</div>
-</td-->
                                 </tr>
                             </tbody>
                         </table>

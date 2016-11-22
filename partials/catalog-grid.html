@@ -1,5 +1,5 @@
 <div id="page-wrapper" class="gray-bg">
-    <div class="wrapper wrapper-content animated fadeInRight" ng-init="getFullCatalog()">
+    <div class="wrapper wrapper-content animated fadeInRight" ng-init="getFullCatalogInfo()">
         <div class="ibox-content m-b-sm border-bottom">
             <div class="row">
                 <div class="col-sm-3">
@@ -41,18 +41,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12 text-align-center">
-                    <ol class="breadcrumb">
-                        <li class="active">
-                            <a href="#/catalog-grid"><strong>Visualizza come griglia</strong></a>
-                        </li>
-                        <li>
-                            <a href="#/catalog-list">Visualizza come lista</a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
         </div>
         <div class="row">
             <div ng-repeat="wine in wines | filter:{description : name.filterModel, type: type.filterModel, region : region.filterModel, producer : producer.filterModel}">
@@ -76,6 +64,7 @@ $10
                                     <div class="btn btn-xs btn-outline btn-primary">{{wine.region}}</div>
                                     <div class="btn btn-xs btn-outline btn-primary">{{wine.type}}</div>
                                     <div class="btn btn-xs btn-outline btn-primary">{{wine.alcohol}}&deg;</div>
+                                    <div class="btn btn-xs btn-outline btn-primary">{{wine.price}}&euro;</div>
                                 </div>
                             </div>
                         </div>

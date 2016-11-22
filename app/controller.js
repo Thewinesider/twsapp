@@ -39,6 +39,20 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     *   @params {none}
     *   @return {json} the wine list
     */
+    $scope.getFullCatalogInfo = function () {
+        Data.get('fullCatalogInfo').then(function (results) {
+            console.log(JSON.stringify(results));
+            $scope.regions = results["regions"]
+            $scope.producers = results["producers"]
+            $scope.wines = results["wines"];
+        });
+    };
+
+    /* 
+    *   Get the wine list of the logged user
+    *   @params {none}
+    *   @return {json} the wine list
+    */
     $scope.getWineList = function () {
         Data.get('getProducerList').then(function (results) {
             $scope.producers = results;
@@ -48,19 +62,6 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         });
         Data.get('getWineList').then(function (results){
             $scope.wines = results;
-        });
-    };
-
-    /* 
-    *   Get the TWS full catalog
-    *   @params {none}
-    *   @return {json} the wine list
-    */
-    $scope.getInfo = function() {
-        Data.get('getProducerList').then(function (results) {
-            $scope.producers = results['producers'];
-            $scope.regions = results['regions'];
-            $scope.wines = results['wines'];
         });
     };
 
@@ -101,7 +102,6 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             uid: $scope.uid,
         }).then(function (results){
             //Setting scope values
-            console.log(results);
             if(results['totals'][0].sold == null){
                 $scope.totalBottle = 0;   
             }else{
@@ -125,15 +125,14 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             $scope.revenue = _.pluck(results['data'], 'total_restaurants');
             $scope.typeValue = _.pluck(results['wineType'], 'sold');
             $scope.typeNames = _.pluck(results['wineType'], 'type');
-            console.log(JSON.stringify($scope.wines));
             //drawing charts
             if($scope.myChart){
                 $scope.myChart.destroy();
             };
             if($rootScope.role == "admin") {
-                $scope.drawChartMix("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenueTws);
+                $scope.drawChart("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenueTws);
             }else{
-                $scope.drawChartMix("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenue);
+                $scope.drawChart("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenue);
             }
             $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
         });
@@ -142,17 +141,32 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     /* 
     *   Get this week of sales from the logged user or from a specific user
     */
-    $scope.getWineSold = function (uid) {
+    $scope.getWineSold = function (uid, range) {
+        //setting query data
         $scope.uid = uid;
-        $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
-        $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
+        if(range == 'yesterday'){
+            $scope.rangeStart = moment().subtract(1, 'day').format("YYYY-MM-DD 12:00:00");
+            $scope.rangeEnd = moment().format("YYYY-MM-DD 12:00:00");
+        }else if(range == 'today'){
+            $scope.rangeStart = moment().format("YYYY-MM-DD 12:00:00");
+            $scope.rangeEnd = moment().add(1, 'day').format("YYYY-MM-DD 12:00:00");
+        }else{
+            $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
+            $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
+        }
+        //getting data
         Data.get('wineSold', {
             periodStart: $scope.rangeStart,
             periodEnd: $scope.rangeEnd,
             uid: $scope.uid,
-        }).then(function (results){    
-            $scope.wines = results['wines'];
+        }).then(function (results){   
+            if(range == 'yesterday'){
+                $scope.winesRange = results['wines'];
+            }else{
+                $scope.wines = results['wines'];
+            } 
         });
+        //initialize the datatable
         $scope.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
             var defer = $q.defer();
             defer.resolve($scope.wines);
@@ -174,7 +188,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     };
 
 
-    $scope.drawChartMix = function (id, type1, type2, labels, data1, data2) {
+    $scope.drawChart = function (id, type1, type2, labels, data1, data2) {
         var ctx = $(id);
         $scope.myChart = new Chart(ctx, {
             type: type1,
