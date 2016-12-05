@@ -1,6 +1,9 @@
 <?php
 
 require_once 'dbHandler.php';
+require_once 'lwConnect.php';
+require_once 'JWT.php';
+require_once '../lemonway/Autoloader.php';
 require_once 'passwordHash.php';
 require '.././libs/Slim/Slim.php';
 
@@ -11,7 +14,7 @@ $app = new \Slim\Slim();
 // User id from db - Global Variable
 $user_id = NULL;
 
-require_once 'authentication.php';
+require_once 'api.php';
 
 /**
  * Verifying required params posted or not

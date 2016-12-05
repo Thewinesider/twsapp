@@ -48,6 +48,11 @@ app.config(['$routeProvider',
                     templateUrl: 'partials/lastwine.html',
                     controller: 'twsCtrl'
                 })
+                    .when('/addcustomer', {
+                    title: 'Add a customer',
+                    templateUrl: 'partials/addcustomer.html',
+                    controller: 'twsCtrl'
+                })
                     .when('/', {
                     title: 'WineSpy',
                     templateUrl: 'partials/winespy.html',
@@ -75,7 +80,7 @@ app.config(['$routeProvider',
                 }
             }
         });
-        
+
         /* 
         *   Logout the user
         *   @params {none}

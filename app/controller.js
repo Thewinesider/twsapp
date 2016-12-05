@@ -1,6 +1,4 @@
 app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $location, $http, Data, moment, DTOptionsBuilder, DTColumnBuilder) {
-
-
     $scope.date = {
         startDate: moment().startOf('isoWeek').format("YYYY-MM-DD 12:00:00"),
         endDate: moment().endOf('isoWeek').format("YYYY-MM-DD 00:00:00")
@@ -34,8 +32,8 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         });
     };
 
-    $scope.getUsers = function(role) {
-        Data.post('getUserList', {
+    $scope.getUser = function(role) {
+        Data.post('user', {
             role: role
         }).then(function (results) {
             $scope.users = results
@@ -46,8 +44,8 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     /* 
     *   Get the wine list of the logged user
     */
-    $scope.getFullCatalogInfo = function () {
-        Data.get('fullCatalogInfo').then(function (results) {
+    $scope.getCatalog = function () {
+        Data.get('catalog').then(function (results) {
             console.log(JSON.stringify(results));
             $scope.regions = results["regions"]
             $scope.producers = results["producers"]
@@ -59,13 +57,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     *   Get the wine list of the logged user
     */
     $scope.getWineList = function () {
-        Data.get('getProducerList').then(function (results) {
-            $scope.producers = results;
-        });
-        Data.get('getRegionList').then(function (results) {
-            $scope.regions = results;
-        });
-        Data.get('getWineList').then(function (results){
+        Data.get('wineList').then(function (results){
             $scope.wines = results;
         });
     };
@@ -79,7 +71,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         }).then(function (results) {
             Data.toast(results);
             if (results.status == "success") {
-                $location.path('winespy');
+                $location.path('login');
             }
         });
     };
@@ -89,6 +81,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     */
     $scope.getStatistics = function (uid) {
         $scope.uid = uid;
+        console.log("UID: " + uid);
         $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
         $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
         Data.get('statistics', {
@@ -97,7 +90,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             uid: $scope.uid,
         }).then(function (results){
             //Setting scope values
-            console.log(JSON.stringify(results));
+            
             if(results['totals'][0].sold == null){
                 $scope.totalBottle = 0;   
             }else{
@@ -266,23 +259,6 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
                 ]
             }
         });
-    };
-
-
-    /* 
-    *   Get all the wines downloaded from yesterday to today
-    *   @params {none}
-    */
-    $scope.getWineDownloaded = function (when) {
-        if(when=='yesterday') {
-            Data.get('getWineSoldYesterday').then(function (results) {
-                $scope.ywines = results;
-            });
-        }else{
-            Data.get('getWineSoldToday').then(function (results) {
-                $scope.twines = results;
-            });
-        }
     };
 
     $scope.closeMenu = function () {

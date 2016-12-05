@@ -1,0 +1,123 @@
+<div id="page-wrapper" class="gray-bg">
+    <div id="addCustomerForm" class="wrapper wrapper-content animated fadeInRight">
+        <div class="col-md-12">
+            <form name="signupForm" class="form-inline form-group-lg" role="form">
+                <div class="ibox-content m-b-sm border-bottom">
+                    <h2>Dati contrattuali</h2>
+                    <h4>Inserisci le informazioni contrattuali del cliente</h4>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control txt-xl" placeholder="Ragione sociale" name="companyName" ng-model="customer.companyName" focus/>
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="P.IVA" name="piva" ng-model="customer.piva"/>
+                        </div>     <div class="col-md-6">
+                        <input type="text" class="form-control txt-xl" placeholder="Codice Fiscale" name="piva" ng-model="customer.fiscod"/>
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="Email" name="email" ng-model="customer.email"/>
+                            <span ng-show="signupForm.email.$error.email" class="help-inline">Email non valida</span> 
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="PEC" ng-model="customer.pec" />
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="Indrizzo" ng-model="customer.street" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control txt-xl" placeholder="Città" ng-model="customer.city" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control txt-xl" placeholder="CAP" ng-model="customer.postCode" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox-content m-b-sm border-bottom">
+                    <h2>Rappresentante Legale</h2>
+                    <h4>Inserisci le informazioni del legale rappresentante</h4>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="Nome" ng-model="customer.clientFirstName"/>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="Cognome" ng-model="customer.clientLastName" />
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="Codice Fiscale" ng-model="customer.legalfiscod"/>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="Telefono" ng-model="customer.phone" />
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content m-b-sm border-bottom">
+                    <h2>Informazioni per la spedizione della merce</h2>
+                    <h4>Inserisci le informazioni necessarie per la logistica</h4>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control txt-xl" placeholder="Indrizzo" ng-model="customer.street" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control txt-xl" placeholder="Città" ng-model="customer.city" />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control txt-xl" placeholder="CAP" ng-model="customer.postCode" />
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Giorno spedizione preferito</label>
+                            <select name="status" id="status" class="form-control txt-xl" ng-model="useruid.day">
+                                <option ng-value="1" >Lunedi</option>
+                                <option ng-value="2" >Martedi</option>
+                                <option ng-value="3" >Mercoledi</option>
+                                <option ng-value="4" >Giovedi</option>
+                                <option ng-value="5" >Venerdi</option>
+                                <option ng-value="6" >Sabato</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Orario preferito</label>
+                            <select name="status" id="status" class="form-control txt-xl" ng-model="useruid.hour">
+                                <option ng-value="1" >Mattina 9-11</option>
+                                <option ng-value="2" >Mattina 11-13</option>
+                                <option ng-value="3" >Pomeriggio 13-15</option>
+                                <option ng-value="4" >Pomeriggio 15-17</option>
+                                <option ng-value="5" >Sera 17-19</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Consegna con:</label>
+                            <select name="status" id="status" class="form-control txt-xl" ng-model="useruid.hour">
+                                <option ng-value="1" >Corriere</option>
+                                <option ng-value="2" >Padroncino</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary full-width btn-xl pull-right" ng-click="signUp(signup)" data-ng-disabled="signupForm.$invalid">
+                        Registra cliente
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

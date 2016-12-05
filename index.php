@@ -11,8 +11,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">   
         <link href="stylesheets/style.css" rel="stylesheet">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="stylesheets/angular-datatables.css">
-        <link rel="stylesheet" href="stylesheets/daterangepicker.css"/>
+        <link rel="stylesheet" href="stylesheets/angular-datatables.min.css">
+        <link rel="stylesheet" href="stylesheets/daterangepicker.min.css"/>
         <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css">
         <link rel="stylesheet" href="stylesheets/jquery.dataTables.min.css">
         <link rel="icon" sizes="192x192" href="img/icon-highres.png">
@@ -56,6 +56,14 @@
                         </ul>
                     </li>
                     <li>
+                        <a><i class="fa fa-gear"></i> <span class="nav-label">Gestione</span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a ng-href="#/addcustomer"><i class="fa fa-user-plus"></i> Nuovo cliente</a></li>
+                            <li><a ng-href="#/lastwine"><i class="fa fa-users"></i> Lista clienti</a></li>
+                            <li><a ng-href="#/lastwine"><i class="fa fa-eur"></i> Incassa</a></li>
+                        </ul>
+                    </li>
+                    <li>
                         <a ng-click="logout()"><i class="fa fa-sign-out"></i><span class="nav-label"> Log out</span></a>
                     </li>
                 </ul>
@@ -77,12 +85,12 @@
     <script src="js/ui-bootstrap-tpls-2.2.0.min.js"></script>
     <script async src="js/chart.min.js"></script>
     <script async src="js/underscore.min.js"></script>
-    <script type="text/javascript" src="js/chartjs-directive.js"></script>
+    <script type="text/javascript" src="js/chartjs-directive.min.js"></script>
     <!-- moment.js -->
-    <script src="js/moment/moment.js"></script>
-    <script src="js/angular-moment/angular-moment.js"></script>
+    <script src="js/moment/min/moment.min.js"></script>
+    <script src="js/angular-moment/angular-moment.min.js"></script>
     <!-- daterangepicker.js -->
-    <script src="js/daterangepicker.js"></script>
+    <script src="js/daterangepicker.min.js"></script>
     <script src="js/angular-daterangepicker.min.js"></script>
     <!-- daterangepicker.js -->
     <script src="js/datatables/jquery.dataTables.min.js"></script>
@@ -94,12 +102,11 @@
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
     <script src="js/datatables/angular-datatables.buttons.min.js"></script>
     <!-- Toastr -->
-    <script src="js/toaster.js"></script>
+    <script src="js/toaster.min.js"></script>
     <!-- ANGULAR -->
     <script src="app/app.js"></script>
     <script src="app/factory.js"></script>
     <script src="app/directives.js"></script>
     <script src="app/controller.js"></script>
-    <script src="app/functions.js"></script>
 </html>
 

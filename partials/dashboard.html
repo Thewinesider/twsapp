@@ -29,14 +29,14 @@
                         <div>
                             <div class="pull-right">
                                 <i class="fa fa-calendar"></i> <input date-range-picker class="select-btn date-picker" options="opts" type="text" ng-model="date"/>
-                                <button type="button" class="btn-white" ng-click="getStatistics(useruid)">Applica</button>
+                                <button type="button" class="btn-white" ng-click="getStatistics(uid)">Applica</button>
                             </div>
                             <h1 class="m-b-xs">Panoramica generale</h1> 
                             <small>Da <strong>{{rangeStart}}</strong> a <strong>{{rangeEnd}}</strong></small>
                         </div>
 
                         <div id="wineGraph-wrapper">
-                            <canvas id="wineGraph" height="70"></canvas>
+                            <canvas id="wineGraph" height="90"></canvas>
                         </div>
 
                         <div class="m-t-md">
