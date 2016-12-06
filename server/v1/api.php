@@ -3,7 +3,7 @@
     PWD caminetti: $2a$10$3bb415d3ff88550530a75OKhOiE4pSxeWMzlks4UXOpgUJ5ZC26t.
 */
 /* Set a new session */
-$app->get('/session', function() {
+$app->get('/session', function () {
     $db = new DbHandler();
     $session = $db->getSession();
     $response["uid"] = $session['uid'];
@@ -13,57 +13,216 @@ $app->get('/session', function() {
     echoResponse(200, $session);
 });
 
-$app->get('/user', function() {
+$app->post('/customerSDD', function () use ($app) {
     $lemonway = lwConnect::getApiInstance();
-    $walletID = 7;
-    $token = JWT::encode($walletID, 'secret_server_key');
-    /*$response = $lemonway->RegisterWallet(array('wallet' => $walletID,
-                                           'clientMail' => 'pippo@pippo.com',
-                                           'clientTitle' => 'Title',
-                                           'clientFirstName' => 'Gabriele',
-                                           'clientLastName' => 'Costamagna'));*/
-    //echoResponse(200, $response);
-    $response2 = $lemonway->MoneyInWebInit(array('wallet' => $walletID,
-                                           'wkToken' => $token,
-                                           'returnUrl' => 'http://www.thewinesider.com/app/#/addcustomer',
-                                           'registerCard' => '1',
-                                           'amountTot' => '1.00'));
-    echoResponse(200, $response2);
-    $lemonway->printCardForm($response2->lwXml->MONEYINWEB->TOKEN,'https://www.lemonway.fr/mercanet_lw.css','it');
+    //$token = JWT::encode($walletID, 'secret_server_key');
+    $response = array();
+    $db = new DbHandler();
+
+    //get the data
+    $r = json_decode($app->request->getBody());
+    $business_name = $r->customer->business_name;
+    $vat_number = $r->customer->vat_number;
+    $tax_code = $r->customer->tax_code;
+    $email = $r->customer->email;
+    $pec = $r->customer->pec;
+    $legal_address = $r->customer->legal_address;
+    $legal_city = $r->customer->legal_city;
+    $legal_cap = $r->customer->legal_cap;
+    $attorney_name = $r->customer->attorney_name;
+    $attorney_surname = $r->customer->attorney_surname;
+    $attorney_taxcode = $r->customer->attorney_taxcode;
+    if(!is_null($r->customer->attorney_phone_number)) {
+        $attorney_phone_number = $r->customer->attorney_phone_number;
+    }else{
+        $attorney_phone_number = '';
+    }
+    $shipping_address = $r->customer->shipping_address;
+    $shipping_city = $r->customer->shipping_city;
+    $shipping_cap = $r->customer->shipping_cap;
+    $shipping_day = $r->customer->shipping_day;
+    $shipping_hour = $r->customer->shipping_hour;
+    $payment_type = $r->customer->payment_type;
+    $bank_holder = $r->customer->bank_holder;
+    $bank_iban = $r->customer->bank_iban;
+    $bank_bic = $r->customer->bank_bic;
+    $bank_name = $r->customer->bank_name;
+    $bank_address = $r->customer->bank_address;
+    //check if the user already exist 
+    $userExist = $db->getOneRecord("SELECT 1 FROM customer WHERE email = '" . $email ."'");
+    if ($userExist != null) {
+        $code = 201;
+        $response["status"] = "error";
+        $response["message"] =  "L'utente associato alla mail è già presente.";
+    } else { 
+        //register a new user
+        //get the last ID and assign it as a new external WallletID in Lemonway
+        $error_log = "";
+        $walletID = $db->getOneRecord("SELECT MAX(ID) as ID FROM customer");
+        $walletID = $walletID["ID"]+1;
+
+        //register the user on TWS
+        $column_names = array('business_name','vat_number','tax_code','email','pec','legal_address','legal_city','legal_cap','attorney_name','attorney_surname','attorney_taxcode','attorney_phone_number','shipping_address','shipping_city','shipping_cap','shipping_day','shipping_hour','payment_type','bank_holder','bank_iban','bank_bic');
+        $result = $db->insertIntoTable($r->customer, $column_names, 'customer');         
+        //register a new wallet on Lemonway
+        $lmw_wallet_response = $lemonway->RegisterWallet(array('wallet' => $walletID,
+                                                               'clientMail' => $email,
+                                                               'clientFirstName' => $attorney_name,
+                                                               'clientLastName' => $attorney_surname,
+                                                               'phoneNumber' => $attorney_phone_number,
+                                                               'street' => $legal_address,
+                                                               'postCode' => $legal_cap,
+                                                               'city' => $legal_city,
+                                                               'companyName' => $business_name));
+        error_log("qui arrivo");
+        if(isset($lmw_wallet_response->lwError)){
+            $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
+            $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
+        }
+
+        //add a new IBAN to the wallet
+        $lmw_iban_response = $lemonway->RegisterIBAN(array('wallet'=>$walletID,
+                                                           'holder' => $bank_holder,
+                                                           'bic' => $bank_bic,
+                                                           'iban' => $bank_iban,
+                                                           'dom1' => $bank_name,
+                                                           'dom2' => $bank_address));
+
+        if(isset($lmw_iban_response->lwError)){
+            $error = lwConnect::errorException($lmw_iban_response->lwError->CODE);
+            $error_log .= "<br>" . $lmw_iban_response->lwError->CODE .": ".$error;
+        }
+
+        if ($error_log == "") {
+            $code = 200;
+            $response["status"] = "success";
+            $response["message"] = "Utente creato correttamente";            
+        } else {
+            $code = 201;
+            $response["status"] = "error";
+            $response["message"] = "Si è verificato un errore. Utente non creato." . $error_log;
+            //reverse the user
+            $db->execQuery("DELETE FROM customer WHERE id = " . $walletID);
+        }   
+    }
+    echoResponse($code, $response);
+
+
+    /*$response2 = $lemonway->MoneyInWebInit(array('wallet' => $walletID,
+                                                 'wkToken' => $token,
+                                                 'returnUrl' => 'http://www.thewinesider.com/app/#/addcustomer',
+                                                 'registerCard' => '1',
+                                                 'amountTot' => '1.00'));
+    //echoResponse(200, $response2);
+    $lemonway->printCardForm($response2->lwXml->MONEYINWEB->TOKEN,'https://www.lemonway.fr/mercanet_lw.css','it');*/
 });
 
-/* 
-        <wallet>string</wallet>
-        <clientMail>string</clientMail>
-        <clientTitle>string</clientTitle>
-        <clientFirstName>string</clientFirstName>
-        <clientLastName>string</clientLastName>
-        <phoneNumber>string</phoneNumber>
-        <mobileNumber>string</mobileNumber>
-        <street>string</street>
-        <postCode>string</postCode>
-        <city>string</city>
-        <ctry>string</ctry>
-        <birthdate>string</birthdate>
-        <isCompany>string</isCompany>
-        <companyName>string</companyName>
-        <companyWebsite>string</companyWebsite>
-        <companyDescription>string</companyDescription>
-        <isDebtor>string</isDebtor>
-        <nationality>string</nationality>
-        <birthcity>string</birthcity>
-        <birthcountry>string</birthcountry>
-        <companyIdentificationNumber>string</companyIdentificationNumber>
-        <payerOrBeneficiary>string</payerOrBeneficiary>
-        <isOneTimeCustomer>string</isOneTimeCustomer>
-        <wlLogin>string</wlLogin>
-        <wlPass>string</wlPass>
-        <language>string</language>
-        <version>string</version>
-        <walletIp>string</walletIp>
-        <walletUa>string</walletUa>
-        <isTechWallet>string</isTechWallet>
-*/
+$app->post('/customerCC', function () use ($app) {
+    $lemonway = lwConnect::getApiInstance();
+    $response = array();
+    $db = new DbHandler();
+
+    //get the data
+    $r = json_decode($app->request->getBody());
+    $business_name = $r->customer->business_name;
+    $vat_number = $r->customer->vat_number;
+    $tax_code = $r->customer->tax_code;
+    $email = $r->customer->email;
+    $pec = $r->customer->pec;
+    $legal_address = $r->customer->legal_address;
+    $legal_city = $r->customer->legal_city;
+    $legal_cap = $r->customer->legal_cap;
+    $attorney_name = $r->customer->attorney_name;
+    $attorney_surname = $r->customer->attorney_surname;
+    $attorney_taxcode = $r->customer->attorney_taxcode;
+    if(isset($r->customer->attorney_phone_number)) {
+        $attorney_phone_number = $r->customer->attorney_phone_number;
+    }else{
+        $attorney_phone_number = '';
+    }
+    $shipping_address = $r->customer->shipping_address;
+    $shipping_city = $r->customer->shipping_city;
+    $shipping_cap = $r->customer->shipping_cap;
+    $shipping_day = $r->customer->shipping_day;
+    $shipping_hour = $r->customer->shipping_hour;
+    $payment_type = $r->customer->payment_type;
+    if(isset($r->customer->bank_holder)) {
+        $bank_holder = $r->customer->bank_holder;
+        $bank_iban = $r->customer->bank_iban;
+        $bank_bic = $r->customer->bank_bic;
+        $bank_name = $r->customer->bank_name;
+        $bank_address = $r->customer->bank_address;
+    }
+    
+    //check if the user already exist 
+    $userExist = $db->getOneRecord("SELECT 1 FROM customer WHERE email = '" . $email ."'");
+
+    if ($userExist != null) {
+        $code = 201;
+        $response["status"] = "error";
+        $response["message"] =  "L'utente associato alla mail è già presente.";
+        echoResponse($code, $response);
+    } else { 
+        //register a new user
+        //get the last ID and assign it as a new external WallletID in Lemonway
+        $error_log = "";
+        $walletID = $db->getOneRecord("SELECT MAX(ID) as ID FROM customer");
+        $walletID = $walletID["ID"]+1;
+        //create a token to pass through lemonway
+        $token = JWT::encode($walletID, 'secret_server_key');
+        //register the user on TWS
+        $column_names = array('business_name','vat_number','tax_code','email','pec','legal_address','legal_city','legal_cap','attorney_name','attorney_surname','attorney_taxcode','attorney_phone_number','shipping_address','shipping_city','shipping_cap','shipping_day','shipping_hour','payment_type','bank_holder','bank_iban','bank_bic');
+        $result = $db->insertIntoTable($r->customer, $column_names, 'customer');         
+        if($result == null) {
+            $error_log .=  "Utente non creato";
+        }
+        //register a new wallet on Lemonway*/
+        $token = JWT::encode($walletID, 'secret_server_key');
+        $lmw_wallet_response = $lemonway->RegisterWallet(array('wallet' => $walletID,
+                                                               'clientMail' => $email,
+                                                               'clientFirstName' => $attorney_name,
+                                                               'clientLastName' => $attorney_surname,
+                                                               'phoneNumber' => $attorney_phone_number,
+                                                               'street' => $legal_address,
+                                                               'postCode' => $legal_cap,
+                                                               'city' => $legal_city,
+                                                               'companyName' => $business_name));
+        
+        if(isset($lmw_wallet_response->lwError)){
+            $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
+            $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
+        }
+
+        //register the cc on Lemonway
+        $lmw_cc_response = $lemonway->MoneyInWebInit(array('wallet' => $walletID,
+                                                           'amountTot' => '1.00',
+                                                           'wkToken' => $token,
+                                                           'comment'=>'Card register',
+                                                           'returnUrl'=>"http://localhost:8888/twsapp/server/v1/lemonwayStatus.php",
+                                                           'cancelUrl'=>"http://localhost:8888/twsapp/server/v1/lemonwayStatus.php",
+                                                           'errorUrl'=>"http://localhost:8888/twsapp/server/v1/lemonwayStatus.php",
+                                                           'registerCard' => '1'));
+        if(isset($lmw_cc_response->lwError)){
+            $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
+            $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
+        }
+
+        if ($error_log == "") {
+            $code = 200;
+            $response["status"] = "success";
+            $response["message"] = "Utente creato correttamente";
+            $response["url"] = $lemonway->config->wkUrl . "?moneyintoken=" . $lmw_cc_response->lwXml->MONEYINWEB->TOKEN . '&p=' . $lemonway->config->css . '&lang=' . $lemonway->config->lang;
+            echoResponse($code, $response);
+        } else {
+            $code = 201;
+            $response["status"] = "error";
+            $response["message"] = "Si è verificato un errore. " . $error_log;
+            //reverse the user
+            $db->execQuery("DELETE FROM customer WHERE id = " . $walletID);
+            echoResponse($code, $response);
+        }   
+    }
+});
 
 /* Get the logged user winelist*/
 $app->get('/wineList', function() use ($app) {

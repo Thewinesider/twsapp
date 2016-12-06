@@ -27,6 +27,8 @@ class lwConnect {
      * @var string
      */
     const PASS             = '123456';
+    
+    const CSS             = 'https://www.lemonway.fr/mercanet_lw.css';
 
     /**
      * LANG Used to set API language
@@ -58,11 +60,33 @@ class lwConnect {
             self::$api->config->wkUrl = self::WEBKIT_URL;
             self::$api->config->wlLogin = self::LOGIN;
             self::$api->config->wlPass = self::PASS;
+            self::$api->config->css = self::CSS;
             self::$api->config->lang = self::LANG;
             self::$api->config->isDebugEnabled = self::DEBUG;
         }
         return self::$api;
     }
+
+    /**
+    *   Get error
+    *
+    */
+    public static function errorException($code) {
+        $error = "";
+        switch ($code) {
+            case 153:
+                $error = "Il Wallet o l'IBAN esistono già.";
+                break;
+            case 221:
+                $error = "Formato IBAN non valido.";
+                break;
+            case 253:
+                $error = "Formato telefono non valido.";
+                break;
+        }
+        return $error;
+    }
+
 }
 
 ?>

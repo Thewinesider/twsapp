@@ -1,40 +1,7 @@
 <?php
-
-//Money-in by card with 3D Secure, using Atos/BNP card form in indirect mode
-if (isset($_POST) && sizeof($_POST) > 0){
-    //notification from Lemon Way's server. Will not work if you're testing using a local return URL
-    foreach ($_POST as $key => $value) {
-        // Write to server error log for example purpose
-        error_log('<br/>POST '.$key.' : '.$value.'');
-    }
-    if (isset($_POST['response_transactionId'])){
-        //call GetMoneyInTransDetails to retrieve payment status, and proceed depending on result.
-        $merchantToken = '';
-        $moneyInID = $_POST['response_transactionId'];
-        $isFromGET = false;
-        include './MoneyInWebFinalize.php';
-    }
-} else if (isset ($_GET) && sizeof($_GET) > 0){
-    //user browser is returning from payment
-    print 'GET : ';
-    foreach ($_GET as $key => $value) {
-        print ('<br/>GET '.$key.' : '.$value.'');
-    }
-    if (isset($_GET['response_wkToken'])){
-        //call GetMoneyInTransDetails to retrieve payment status, and proceed depending on result.
-        $merchantToken = $_GET['response_wkToken'];
-        $moneyInID = '';
-        $isFromGET = true;
-        include './MoneyInWebFinalize.php';
-    }
-}
-
-<?php
-namespace LemonWay\Examples;
 use LemonWay\Models\Operation;
 
-require_once 'server/lemonway/Autoloader.php';
-$api = ExamplesBootstrap::getApiInstance();
+$lemonway = lwConnect::getApiInstance();
 
 /**
  *		Case : This follows the MoneyInWebInit case : your customer has returned to your website or you have received a POST notification from Lemon Way. You now need to find out how the payment went.
@@ -49,7 +16,7 @@ $api = ExamplesBootstrap::getApiInstance();
  *				- decide to mark the payment as failed on your side, but keep in mind that this won't prevent Lemon Way from accepting the payment if the customer pays.
  */
 
-$res = $api->GetMoneyInTransDetails(array('transactionId'=>$moneyInID,
+$res = $lemonway->GetMoneyInTransDetails(array('transactionId'=>$moneyInID,
     'transactionComment'=>'',
     'transactionMerchantToken'=>$merchantToken));
 if (isset($res->lwError)){
@@ -90,3 +57,5 @@ if (count($res->operations) != 1){
         */
     }
 }
+
+?>

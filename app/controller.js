@@ -1,4 +1,4 @@
-app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $location, $http, Data, moment, DTOptionsBuilder, DTColumnBuilder) {
+app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $location, $http, $window, Data, moment, DTOptionsBuilder, DTColumnBuilder) {
     $scope.date = {
         startDate: moment().startOf('isoWeek').format("YYYY-MM-DD 12:00:00"),
         endDate: moment().endOf('isoWeek').format("YYYY-MM-DD 00:00:00")
@@ -77,6 +77,34 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     };
 
     /* 
+    *   Add a new user with IBAN 
+    */
+    $scope.newCustomerSDD = function (customer) {
+        Data.post('customerSDD', {
+            customer: customer
+        }).then(function (results) {
+            Data.toast(results);
+        });
+    };
+    
+    /* 
+    *   Add a new user with Credit Card 
+    */
+    $scope.newCustomerCC = function (customer) {
+        Data.post('customerCC', {
+            customer: customer
+        }).then(function (results) {
+            console.log(JSON.stringify(results));
+            if (results["status"] == 'success') {
+                $window.location.href = results["url"]; 
+            } else {
+                Data.toast(results);
+            }
+           
+        });
+    };
+
+    /* 
     *   Get this week of sales from the logged user or from a specific user
     */
     $scope.getStatistics = function (uid) {
@@ -90,7 +118,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             uid: $scope.uid,
         }).then(function (results){
             //Setting scope values
-            
+
             if(results['totals'][0].sold == null){
                 $scope.totalBottle = 0;   
             }else{

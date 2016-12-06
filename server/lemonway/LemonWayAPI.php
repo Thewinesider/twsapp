@@ -895,6 +895,7 @@ class LemonWayAPI
         // If Payxpert
         // echo("<script>location.href = '".$this->config->wkUrl . "?moneyintoken=" . $moneyInToken . '&p=' . urlencode($cssUrl) . '&lang=' . $language."';</script>");
         // If Atos
+        echo $this->config->wkUrl . "?moneyintoken=" . $moneyInToken . '&p=' . urlencode($cssUrl) . '&lang=' . $language;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->config->wkUrl . "?moneyintoken=" . $moneyInToken . '&p=' . urlencode($cssUrl) . '&lang=' . $language);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
