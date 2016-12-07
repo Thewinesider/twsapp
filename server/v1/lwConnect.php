@@ -27,7 +27,7 @@ class lwConnect {
      * @var string
      */
     const PASS             = '123456';
-    
+
     const CSS             = 'https://www.lemonway.fr/mercanet_lw.css';
 
     /**
@@ -74,11 +74,17 @@ class lwConnect {
     public static function errorException($code) {
         $error = "";
         switch ($code) {
+            case 152:
+                $error = "Il Wallet esiste già.";
+                break;
             case 153:
                 $error = "Il Wallet o l'IBAN esistono già.";
                 break;
             case 221:
                 $error = "Formato IBAN non valido.";
+                break;
+            case 242:
+                $error = "Formato SWIFT/BIC non valido.";
                 break;
             case 253:
                 $error = "Formato telefono non valido.";

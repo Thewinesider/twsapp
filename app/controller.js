@@ -77,30 +77,23 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     };
 
     /* 
-    *   Add a new user with IBAN 
-    */
-    $scope.newCustomerSDD = function (customer) {
-        Data.post('customerSDD', {
-            customer: customer
-        }).then(function (results) {
-            Data.toast(results);
-        });
-    };
-    
-    /* 
     *   Add a new user with Credit Card 
     */
-    $scope.newCustomerCC = function (customer) {
-        Data.post('customerCC', {
+    $scope.newCustomer = function (customer, payment_type) {
+        if(payment_type == 1) {
+            $api = "customerCC";
+        } else {
+            $api = "customerSDD";
+        }
+        Data.post($api, {
             customer: customer
         }).then(function (results) {
-            console.log(JSON.stringify(results));
-            if (results["status"] == 'success') {
+            if (results["status"] == 'success' && payment_type == 1) {
                 $window.location.href = results["url"]; 
             } else {
                 Data.toast(results);
             }
-           
+
         });
     };
 

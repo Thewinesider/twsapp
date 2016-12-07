@@ -264,8 +264,33 @@ nav {
     .form-control {
         width: 100%;
     }
+
+    .ng-invalid {
+        background: rgba(248, 172, 89, 0.1)
+    }
+    
+    .ng-invalid {
+        &.ng-dirty {
+            background: rgba(237, 85, 101, 0.1)
+        }
+    }
+    
+    .ng-valid {
+        background: rgba(26, 179, 148, 0.1);
+    }
+    
+    .ng-valid {
+        &.ng-empty {
+            background: transparent;
+        }
+    }
 }
 
 .text-center {
     text-align: center;
+}
+
+
+body.mini-navbar .navbar-static-side {
+    position: fixed;
 }
