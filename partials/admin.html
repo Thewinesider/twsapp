@@ -1,5 +1,5 @@
 <div id="page-wrapper" class="gray-bg">
-    <div class="wrapper wrapper-content animated fadeInRight" ng-init="getWineSold(uid)">
+    <div class="wrapper wrapper-content animated fadeInRight" ng-init="getStatistics()">
         <div class="row" ng-show="role == 'demo'">
             <div class="col-md-12">
                 <div class="yellow-bg text-center">
@@ -15,7 +15,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label class="control-label" for="product_name">Filtra ristoranti</label>
-                        <select name="status" id="status" class="form-control" ng-init="getUsers('customer')" ng-model="useruid" ng-change="getWineSold(useruid)">
+                        <select name="status" id="status" class="form-control" ng-init="getUsers('customer')" ng-model="useruid" ng-change="getStatistics(useruid)">
                             <option value="" selected>Tutti</option>
                             <option ng-repeat="user in users" ng-value="user.uid" >{{user.restaurant}}</option>
                         </select>
@@ -32,7 +32,7 @@
                         <div>
                             <div class="pull-right">
                                 <i class="fa fa-calendar"></i> <input date-range-picker class="select-btn date-picker" options="opts" type="text" ng-model="date"/>
-                                <button type="button" class="btn-white" ng-click="getWineSold(useruid)">Applica</button>
+                                <button type="button" class="btn-white" ng-click="getStatistics(useruid)">Applica</button>
                             </div>
                             <h1 class="m-b-xs">Dettaglio</h1> 
                             <small>Da <strong>{{rangeStart}}</strong> a <strong>{{rangeEnd}}</strong></small>

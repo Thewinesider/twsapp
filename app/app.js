@@ -70,7 +70,7 @@ app.config(['$routeProvider',
             if (results.uid) {
                 $rootScope.authenticated = true;
                 $rootScope.role = results.role;
-                $rootScope.uid = results.uid;
+                $rootScope.sessionUid = results.uid;
             } else {
                 var nextUrl = next.$$route.originalPath;
                 if (nextUrl == '/signup') {

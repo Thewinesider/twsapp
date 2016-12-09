@@ -32,6 +32,15 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         });
     };
 
+    $scope.getUsers = function(role) {
+        Data.post('getUserList', {
+            role: role
+        }).then(function (results) {
+            $scope.users = results
+        });
+    }
+
+
     $scope.getUser = function(role) {
         Data.post('user', {
             role: role
@@ -102,7 +111,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     */
     $scope.getStatistics = function (uid) {
         $scope.uid = uid;
-        console.log("UID: " + uid);
+        console.log("UID: " + this.uid);
         $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
         $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
         Data.get('statistics', {
@@ -111,7 +120,6 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             uid: $scope.uid,
         }).then(function (results){
             //Setting scope values
-
             if(results['totals'][0].sold == null){
                 $scope.totalBottle = 0;   
             }else{
@@ -147,13 +155,47 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             if($scope.myChart){
                 $scope.myChart.destroy();
             };
-            if($rootScope.role == "admin") {
+            if($rootScope.role == "admin" && angular.element('#wineGraph').length) {
                 $scope.drawChart("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenueTws);
-            }else{
+            }else if(angular.element('#wineGraph').length){
                 $scope.drawChart("#wineGraph", "bar", "line", $scope.period, $scope.bottles, $scope.revenue);
             }
-            $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
+            if(angular.element('#wineGraph').length){
+                $scope.drawChartSingle("#wineType", "pie", $scope.typeNames, $scope.typeValue);
+            }
         });
+        //define buttons
+        if($rootScope.role == 'admin'){
+            var btn =[
+                'colvis',
+                'copy',
+                'print',
+                'excel'
+            ];
+        }else{
+            var btn =[
+                'copy',
+                'print',
+                'excel'
+            ];
+        }
+        //initialize the datatable
+        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
+            var defer = $q.defer();
+            defer.resolve($scope.wines);
+            return defer.promise;
+        })
+            .withPaginationType('full_numbers')
+        // Active Buttons extension
+            .withButtons(btn);
+        $scope.dtColumns = [
+            DTColumnBuilder.newColumn('sku').withTitle('SKU'),
+            DTColumnBuilder.newColumn('name').withTitle('Nome vino'),
+            DTColumnBuilder.newColumn('type').withTitle('Tipo'),
+            DTColumnBuilder.newColumn('sold').withTitle('Venduto'),
+            DTColumnBuilder.newColumn('revenue').withTitle('Fatturato'),
+            DTColumnBuilder.newColumn('revenueTWS').withTitle('Fatturato TWS')
+        ];
     };
 
     /* 

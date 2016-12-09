@@ -13,6 +13,15 @@ $app->get('/session', function () {
     echoResponse(200, $session);
 });
 
+/* Get the user list from the DB */
+$app->post('/getUserList', function() use ($app) {
+    $db = new DbHandler();
+    $user = json_decode($app->request->getBody());
+    $user = $db->getRecord("SELECT * FROM users WHERE role LIKE '". $user->role ."'");
+    echoResponse(200, $user);
+});
+
+
 $app->post('/customerSDD', function () use ($app) {
     $lemonway = lwConnect::getApiInstance();
     //$token = JWT::encode($walletID, 'secret_server_key');
@@ -186,15 +195,19 @@ $app->get('/statistics', function() use ($app) {
     $uid = $app->request->get("uid");
     $q = "";
     $qJoin = "";
-    if($uid != null) { //if 0 get all the records
-        $q = " AND winesold.id_winelist = " . $uid . " AND winelist.id_user = " . $uid . "";
-        $qJoin = " AND ws.id_winelist = " . $uid . " ";
-    }else{
+    if($uid == null && $session['role'] == 'customer') { // if uid not set get the logged user statistics
+        $q = " AND winesold.id_winelist = " . $session['uid'] . " AND winelist.id_user = " . $session['uid'] . "";
+        $qJoin = " AND ws.id_winelist = " . $session['uid'] . " ";
+    }elseif($uid == null && $session['role'] == 'admin'){ // if uid not set and the user is 'admin' get all stat
         $q = " AND winesold.id_winelist = winelist.id_user AND winesold.id_winelist <> 1";
         $qJoin = " AND ws.id_winelist != 1 ";
+    }else{//else get a specific user
+        $q = " AND winesold.id_winelist = " . $uid . " AND winelist.id_user = " . $uid . "";
+        $qJoin = " AND ws.id_winelist = " . $uid . " ";
     }
 
-    $query = "SELECT winesold.sku, winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants, DATE(winesold.date) as date, HOUR(winesold.date) as hour FROM winesold, winelist WHERE winelist.sku = winesold.sku". $q. " AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
+    $query = "SELECT catalog.type AS type, winesold.sku, winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants, DATE(winesold.date) as date, HOUR(winesold.date) as hour FROM winesold, winelist, catalog WHERE winelist.sku = winesold.sku". $q. " AND catalog.SKU = winelist.SKU AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
+    
     $response["wines"] = $db->getRecord($query);
 
     $query = "SELECT DATE_FORMAT(cl.datefield, '%e %b') as days, IFNULL(SUM(ws.value),0) AS total_sales, IFNULL((SUM(ws.value)*wl.price),0) AS total_revenues, IFNULL((SUM(ws.value)*wl.suggested_price),0) AS total_restaurants FROM winesold ws 
