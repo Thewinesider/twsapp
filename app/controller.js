@@ -120,6 +120,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             uid: $scope.uid,
         }).then(function (results){
             //Setting scope values
+            console.log(JSON.stringify(results));
             if(results['totals'][0].sold == null){
                 $scope.totalBottle = 0;   
             }else{
