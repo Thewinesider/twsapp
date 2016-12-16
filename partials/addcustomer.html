@@ -1,10 +1,20 @@
 <div id="page-wrapper" class="gray-bg">
     <div id="addCustomerForm" class="wrapper wrapper-content animated fadeInRight">
         <div class="col-md-12">
+            <div class="yellow-bg text-center">
+                <div class="m-b-md" style=" font-size: 15px; padding: 8px;">
+                    <i class="fa fa-warning"></i> <br/>
+                    Fino a quando non completerai le informazioni, non sarà possibile utilizzare The Winesider.<br/>
+                    Prenditi il tuo tempo. Compila correttamente tutti i campi, accertandoti di non commettere errori.<br/>
+                    Grazie.
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
             <form name="signupForm" autocomplete="on" class="form-inline form-group-lg" role="form">
                 <!-- Dati contrattuali -->
                 <div class="ibox-content m-b-sm border-bottom">
-                    <h2>Inserisci le informazioni contrattuali del ristorante</h2>
+                    <h2>Inserisci le informazioni della tua attività.</h2>
                     <div class="form-group"></div>
                     <div class="row">
                         <div class="col-md-12">
@@ -43,7 +53,7 @@
                     </div>
                     <!-- Dati Rappresentante legale -->
                     <hr>
-                    <h2>Inserisci le informazioni del legale rappresentante</h2>
+                    <h2>Inserisci le informazioni del legale rappresentante.</h2>
                     <div class="form-group"></div>
                     <div class="row">
                         <div class="col-md-6">
@@ -64,7 +74,7 @@
                     </div>
                     <!-- informazioni di spedizione --> 
                     <hr>
-                    <h2>Informazioni per la spedizione della merce</h2>
+                    <h2>Informazioni per la spedizione della merce.</h2>
                     <div class="form-group"></div>
                     <div class="row">
                         <div class="col-md-6">
@@ -81,68 +91,31 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label>Giorno spedizione preferito</label>
-                            <select id="status" class="form-control txt-xl" name="shipping_day" ng-model="customer.shipping_day" required>
-                                <option ng-value="1" >Lunedi</option>
-                                <option ng-value="2" >Martedi</option>
-                                <option ng-value="3" >Mercoledi</option>
-                                <option ng-value="4" >Giovedi</option>
-                                <option ng-value="5" >Venerdi</option>
-                                <option ng-value="6" >Sabato</option>
+                            <select class="form-control txt-xl" name="shipping_day" ng-model="customer.shipping_day" required>
+                                <option ng-value="Lunedi" >Lunedi</option>
+                                <option ng-value="Martedi" >Martedi</option>
+                                <option ng-value="Mercoledi" >Mercoledi</option>
+                                <option ng-value="Giovedi" >Giovedi</option>
+                                <option ng-value="Venerdi" >Venerdi</option>
+                                <option ng-value="Sabato" >Sabato</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label>Orario preferito</label>
-                            <select id="status" class="form-control txt-xl" name="shipping_hour" ng-model="customer.shipping_hour" required>
-                                <option ng-value="1" >Mattina 9-11</option>
-                                <option ng-value="2" >Mattina 11-13</option>
-                                <option ng-value="3" >Pomeriggio 13-15</option>
-                                <option ng-value="4" >Pomeriggio 15-17</option>
-                                <option ng-value="5" >Sera 17-19</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- Seleziona metodo di pagamento -->
-                    <hr>
-                    <h2>Informazioni per il pagamento</h2>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <select id="status" class="form-control txt-xl" name="payment_type" ng-model="customer.payment_type" required>
-                                <option ng-value="1">Carta di credito</option>
-                                <option ng-value="2">Bonifico SEPA - RID bancario settimanale</option>
+                            <select class="form-control txt-xl" name="shipping_hour" ng-model="customer.shipping_hour" required>
+                                <option ng-value="1">Mattina 9-11</option>
+                                <option ng-value="2">Mattina 11-13</option>
+                                <option ng-value="3">Pomeriggio 13-15</option>
+                                <option ng-value="4">Pomeriggio 15-17</option>
+                                <option ng-value="5">Sera 17-19</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group"></div>
-                    <div class="row" ng-show="customer.payment_type == 1">
-                        <div class="col-md-12">
-                            <h2 class="text-center">Verrai reindirizzato sul server del partner per la registrazione della carta.</h2>
-                        </div>
-                    </div>
-                    <div ng-show="customer.payment_type == 2">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <input type="text" class="form-control txt-xl" name="bank_holder" placeholder="Titolare del conto" ng-model="customer.bank_holder" ng-required="customer.payment_type == 2"/>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control txt-xl" name="bank_iban" placeholder="IBAN" ng-model="customer.bank_iban" ng-required="customer.payment_type == 2"/>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control txt-xl" name="bank_bic" placeholder="BIC" ng-model="customer.bank_bic" ng-required="customer.payment_type == 2"/>
-                            </div>
-                        </div>
-                        <div class="form-group"></div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="text" class="form-control txt-xl" placeholder="Nome della Banca " name="bank_name" ng-model="customer.bank_name" ng-required="customer.payment_type == 2"/>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control txt-xl" placeholder="Domicilio della Banca" name="bank_address" ng-model="customer.bank_address" ng-required="customer.payment_type == 2"/>
-                            </div>
-                        </div>
-                    </div>
                     <div class="text-center">
+                        <div class="form-group"></div>
                         <span ng-show="signupForm.$invalid" class="help-block">Compila correttamente tutti i campi per registrarti.</span>
-                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="newCustomer(customer,customer.payment_type)" data-ng-disabled="signupForm.$invalid">
+                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="newCustomer(customer)" data-ng-disabled="signupForm.$invalid">
                             Conferma dati e procedi
                         </button>
                     </div>
@@ -151,189 +124,3 @@
         </div>
     </div>
 </div>
-
-<!--- 
-<div id="page-wrapper" class="gray-bg">
-<div id="addCustomerForm" class="wrapper wrapper-content animated fadeInRight">
-<div class="col-md-12">
-<form name="signupForm" autocomplete="on" class="form-inline form-group-lg" role="form">
-<!-- Dati contrattuali >
-<div class="ibox-content m-b-sm border-bottom">
-<h2>Inserisci le informazioni contrattuali del cliente</h2>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-12">
-<input type="text" class="form-control txt-xl" placeholder="Ragione sociale" name="business_name" ng-model="customer.business_name" focus required/>
-<span ng-show="signupForm.business_name.$dirty && signupForm.business_name.$invalid" class="help-block">La ragione sociale è obbligatoria</span>
-</div>
-</div>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="P.IVA" name="vat_number" ng-model="customer.vat_number" required/>
-<span ng-show="signupForm.vat_number.$dirty && signupForm.vat_number.$invalid" class="help-block">La partita IVA è obbligatoria</span>
-</div>     
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Codice Fiscale" name="tax_code" ng-model="customer.tax_code" required/>
-<span ng-show="signupForm.tax_code.$dirty && signupForm.tax_code.$invalid" class="help-block">Il Codice Fiscale è obbligatorio</span>
-</div>
-</div>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-6">
-<input type="email" class="form-control txt-xl" placeholder="Email" name="email" ng-model="customer.email" required/>
-<span ng-show="signupForm.email.$dirty && signupForm.email.$error.email || signupForm.email.$invalid" class="help-block">Email non valida</span> 
-</div>
-<div class="col-md-6">
-<input type="email" class="form-control txt-xl" placeholder="PEC" name="pec" ng-model="customer.pec" required/>
-<span ng-show="signupForm.pec.$dirty && signupForm.pec.$error.pec || signupForm.pec.$invalid" class="help-block">PEC non valida</span> 
-</div>
-</div>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Indrizzo" name="legal_address" ng-model="customer.legal_address" required/>
-<span ng-show="signupForm.legal_address.$dirty && signupForm.legal_address.$invalid" class="help-block">La sede legale è obbligatoria</span>
-</div>
-<div class="col-md-3">
-<input type="text" class="form-control txt-xl" placeholder="Città" name="legal_city" ng-model="customer.legal_city" required/>
-<span ng-show="signupForm.legal_city.$dirty && signupForm.legal_city.$invalid" class="help-block">La Città è obbligatoria</span>
-</div>
-<div class="col-md-3">
-<input type="text" class="form-control txt-xl" placeholder="CAP" name="legal_cap" ng-model="customer.legal_cap" required/>
-<span ng-show="signupForm.legal_cap.$dirty && signupForm.legal_cap.$invalid" class="help-block">Il CAP è obbligatorio</span>
-</div>
-</div>
-<!-- Dati Rappresentante legale >
-<h2>Inserisci le informazioni del legale rappresentante</h2>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Nome Rappresentante Legale" name="attorney_name" ng-model="customer.attorney_name" required/>
-<span ng-show="signupForm.attorney_name.$dirty && signupForm.attorney_name.$invalid" class="help-block">Il nome del rappresentante legale è obbligatorio</span>
-</div>
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Cognome Rappresentante Legale" name="attorney_surname" ng-model="customer.attorney_surname" required/>
-<span ng-show="signupForm.attorney_surname.$dirty && signupForm.attorney_surname.$invalid" class="help-block">Il cognome del rappresentante legale è obbligatorio</span>
-</div>
-</div>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Codice Fiscale Rappresentante Legale" name="attorney_taxcode" ng-model="customer.attorney_taxcode" required/>
-<span ng-show="signupForm.attorney_taxcode.$dirty && signupForm.attorney_taxcode.$invalid" class="help-block">Il cognome del rappresentante legale è obbligatorio</span>
-</div>
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Telefono Rappresentante legale" name="attorney_phone_number" ng-model="signupForm.attorney_phone_number.$dirty && customer.attorney_phone_number"/>
-</div>
-</div>
-<!-- informazioni di spedizione > 
-<h2>Informazioni per la spedizione della merce</h2>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Indrizzo" name="shipping_address" ng-model="customer.shipping_address" required/>
-<span ng-show="signupForm.shipping_cap.$dirty && signupForm.shipping_address.$invalid" class="help-block">L'indrizzo della spedizione è obbligatorio</span>
-</div>
-<div class="col-md-3">
-<input type="text" class="form-control txt-xl" placeholder="Città" name="shipping_city" ng-model="customer.shipping_city" required/>
-<span ng-show="signupForm.shipping_cap.$dirty && signupForm.shipping_city.$invalid" class="help-block">La cittàdella spedizione è obbligatorio</span>
-</div>
-<div class="col-md-3">
-<input type="text" class="form-control txt-xl" placeholder="CAP" name="shipping_cap" ng-model="customer.shipping_cap" required/>
-<span ng-show="signupForm.shipping_cap.$dirty && signupForm.shipping_cap.$invalid" class="help-block">Il CAP della spedizione è obbligatorio</span>
-</div>
-</div>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-6">
-<label>Giorno spedizione preferito</label>
-<select id="status" class="form-control txt-xl" name="shipping_day" ng-model="customer.shipping_day" required>
-<option ng-value="1" >Lunedi</option>
-<option ng-value="2" >Martedi</option>
-<option ng-value="3" >Mercoledi</option>
-<option ng-value="4" >Giovedi</option>
-<option ng-value="5" >Venerdi</option>
-<option ng-value="6" >Sabato</option>
-</select>
-<span ng-show="signupForm.shipping_day.$dirty && signupForm.shipping_day.$invalid" class="help-block">Il giorno preferito è obbligatorio</span>
-</div>
-<div class="col-md-3">
-<label>Orario preferito</label>
-<select id="status" class="form-control txt-xl" name="shipping_hour" ng-model="customer.shipping_hour" required>
-<option ng-value="1" >Mattina 9-11</option>
-<option ng-value="2" >Mattina 11-13</option>
-<option ng-value="3" >Pomeriggio 13-15</option>
-<option ng-value="4" >Pomeriggio 15-17</option>
-<option ng-value="5" >Sera 17-19</option>
-</select>
-<span ng-show="signupForm.shipping_hour.$dirty && signupForm.shipping_hour.$invalid" class="help-block">L'orario preferito è obbligatorio</span>
-</div>
-<!--div class="col-md-3">
-<label>Consegna con:</label>
-<select name="status" id="status" class="form-control txt-xl" ng-model="useruid.hour">
-<option ng-value="1" >Corriere</option>
-<option ng-value="2" >Padroncino</option>
-</select>
-</div>
-</div>
-<!-- Seleziona metodo di pagamento >
-<h2>Seleziona il metodo di pagamento</h2>
-<div class="row">
-<div class="col-md-6">
-<select id="status" class="form-control txt-xl" name="payment_type" ng-model="customer.payment_type" required>
-<option ng-value="1">Carta di credito</option>
-<option ng-value="2">Bonifico SEPA - RID bancario settimanale</option>
-</select>
-<span ng-class="signupForm.payment_type.$invalid && signupForm.payment_type.$invalid" class="help-block">Il metodo di pagamento è obbligatorio</span>
-</div>
-</div>
-<div class="form-group"></div>
-<div class="row" ng-show="customer.payment_type == 1">
-<div class="col-md-12">
-<h2 class="text-center">Verrai reindirizzato sul server del partner per la registrazione della carta.</h2>
-</div>
-</div>
-<div class="row" ng-show="customer.payment_type == 2">
-<div class="col-md-3">
-<input type="text" class="form-control txt-xl" name="bank_holder" placeholder="Titolare del conto" ng-model="customer.bank_holder" ng-required="customer.payment_type == 2"/>
-<span ng-show="signupForm.bank_holder.$invalid && signupForm.bank_holder.$invalid" class="help-block">Il titolare del conto è obbligatorio</span>
-</div>
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" name="bank_iban" placeholder="IBAN" ng-model="customer.bank_iban" ng-required="customer.payment_type == 2"/>
-<span ng-show="signupForm.bank_iban.$dirty && signupForm.bank_iban.$invalid" class="help-block">L'IBAN è obbligatorio</span>
-</div>
-<div class="col-md-3">
-<input type="text" class="form-control txt-xl" name="bank_bic" placeholder="BIC" ng-model="customer.bank_bic" ng-required="customer.payment_type == 2"/>
-<span ng-show="signupForm.bank_bic.$dirty && signupForm.bank_bic.$invalid" class="help-block">Il BIC è obbligatorio</span>
-</div>
-<div class="form-group"></div>
-<div class="row">
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Nome della Banca " name="bank_name" ng-model="customer.bank_name" ng-required="customer.payment_type == 2"/>
-<span ng-show="signupForm.bank_name.$dirty && signupForm.bank_name.$invalid" class="help-block">Il nome della banca è Obbligatorio</span>
-</div>
-<div class="col-md-6">
-<input type="text" class="form-control txt-xl" placeholder="Telefono Rappresentante legale" name="bank_address" ng-model="customer.bank_address" ng-required="customer.payment_type == 2"/>
-<span ng-show="signupForm.bank_address.$dirty && signupForm.bank_address.$invalid" class="help-block">L'indrizzo della banca è obbligatorio</span>
-</div>
-</div>
-</div>
-<div class="text-center">
-<span ng-show="signupForm.$invalid" class="help-block">Compila correttamente tutti i campi obbligatori per registrarti.</span>
-<button ng-show="customer.payment_type == 2" type="submit" class="btn btn-primary full-width btn-xl" ng-click="newCustomerSDD(customer)" data-ng-disabled="signupForm.$invalid">
-Conferma dati e procedi
-</button>
-<button ng-show="customer.payment_type == 1" type="submit" class="btn btn-primary full-width btn-xl" ng-click="newCustomerCC(customer)" data-ng-disabled="signupForm.$invalid">
-Conferma dati e procedi
-</button>
-</div>
-</div>
-</form>
-</div>
-</div>
-</div>
-
-
---->
-

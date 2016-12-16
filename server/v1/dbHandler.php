@@ -51,7 +51,7 @@ class DbHandler {
         }
         //error_log("somewhere here");
         $query = "INSERT INTO ".$table_name."(".trim($columns,',').") VALUES(".trim($values,',').")";
-        //echo $query;
+        echo $query;
         $r = $this->conn->query($query) or error_log($this->conn->error.__LINE__);
 
         if ($r) {
@@ -61,7 +61,7 @@ class DbHandler {
             return NULL;
         }
     }
-    
+
     /**
      * Creating new record
      */
@@ -71,16 +71,16 @@ class DbHandler {
     }
 
     public function getSession(){
-        if (!isset($_SESSION)) {
-            session_start();
-        }
+        session_start();
         $sess = array();
-        if(isset($_SESSION['uid']))
+        if(isset($_COOKIE['uid']))
         {
-            $sess["uid"] = $_SESSION['uid'];
-            $sess["name"] = $_SESSION['name'];
-            $sess["email"] = $_SESSION['email'];
-            $sess["role"] = $_SESSION['role'];
+            $sess["uid"] = $_COOKIE['uid'];
+            $sess["name"] = $_COOKIE['name'];
+            $sess["email"] = $_COOKIE['email'];
+            $sess["role"] = $_COOKIE['role'];
+            $sess["associated_to"] = $_COOKIE['associated_to'];
+            $sess["payment_is_set"] = $_COOKIE['payment_is_set'];
         }
         else
         {
@@ -88,30 +88,24 @@ class DbHandler {
             $sess["name"] = 'Guest';
             $sess["email"] = '';
             $sess["role"] = 'Guest';
+            $sess["associated_to"] = 0;
+            $sess["payment_is_set"] = 0;
         }
         return $sess;
     }
 
     public function destroySession(){
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-        if(isSet($_SESSION['uid']))
+        session_start();
+        if(isset($_COOKIE['uid']))
         {
-            unset($_SESSION['uid']);
-            unset($_SESSION['name']);
-            unset($_SESSION['email']);
-            unset($_SESSION['role']);
-            $info='info';
-            if(isSet($_COOKIE[$info]))
-            {
-                setcookie ($info, '', time() - $cookie_time);
-            }
-            $msg="Logged Out Successfully...";
-        }
-        else
-        {
-            $msg = "Not logged in...";
+            setcookie("uid", '', time()-9999);
+            setcookie("email", '', time()-9999);
+            setcookie("name", '', time()-9999);
+            setcookie("role", '', time()-9999);
+            setcookie("associated_to", '', time()-9999);
+            $msg="Utente disconnesso.";
+        } else {
+            $msg = "Non sei loggato.";
         }
         return $msg;
     }

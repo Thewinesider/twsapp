@@ -21,10 +21,39 @@ $app->post('/getUserList', function() use ($app) {
     echoResponse(200, $user);
 });
 
+$app->post('/customer', function () use ($app) {
+    $response = array();
+    $db = new DbHandler();
+    $session = $db->getSession();
+    $cookieLifetime = 365 * 24 * 60 * 60;
+    //get the data
+    $r = json_decode($app->request->getBody());
+    //check if the customer already exist 
+    $userExist = $db->getOneRecord("SELECT 1 FROM customers WHERE email = '" . $r->customer->email ."'");
+    if ($userExist != null) {
+        $response["status"] = "error";
+        $response["message"] =  "L'utente associato alla mail è già presente.";
+        echoResponse(201, $response);
+    } else {
+        //register the user on TWS
+        $column_names = array('business_name','vat_number','tax_code','email','pec','legal_address','legal_city','legal_cap','attorney_name','attorney_surname','attorney_taxcode','attorney_phone_number','shipping_address','shipping_city','shipping_cap','shipping_day','shipping_hour','associated_to');
+        $result = $db->insertIntoTable($r->customer, $column_names, 'customers');
+        if ($result != NULL) {
+            //update the cookie
+            setcookie("associated_to", $session['uid'], time()+$cookieLifetime);
+            $response["status"] = "success";
+            $response["message"] = "Informazioni registrate correttamente";
+            echoResponse(200, $response);
+        } else {
+            $response["status"] = "error";
+            $response["message"] = "Si è verificato un problema nella registrazione. Per favore, riprovare.";
+            echoResponse(201, $response);
+        }  
+    }
+});
 
 $app->post('/customerSDD', function () use ($app) {
     $lemonway = lwConnect::getApiInstance();
-    //$token = JWT::encode($walletID, 'secret_server_key');
     $response = array();
     $db = new DbHandler();
 
@@ -97,7 +126,7 @@ $app->post('/customerCC', function () use ($app) {
 
     //get the data
     $r = json_decode($app->request->getBody());
-    
+
     //check if the user already exist 
     $userExist = $db->getOneRecord("SELECT 1 FROM customer WHERE email = '" . $r->customer->email ."'");
 
@@ -131,7 +160,7 @@ $app->post('/customerCC', function () use ($app) {
                                                                'postCode' => $r->customer->legal_cap,
                                                                'city' => $r->customer->legal_city,
                                                                'companyName' => $r->customer->business_name));
-        
+
         if(isset($lmw_wallet_response->lwError)){
             $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
             $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
@@ -207,7 +236,7 @@ $app->get('/statistics', function() use ($app) {
     }
 
     $query = "SELECT catalog.type AS type, winesold.sku, winelist.name, SUM(winesold.value) as sold, (SUM(winesold.value)*winelist.price) as total_revenues, (SUM(winesold.value)*winelist.suggested_price) as total_restaurants, DATE(winesold.date) as date, HOUR(winesold.date) as hour FROM winesold, winelist, catalog WHERE winelist.sku = winesold.sku". $q. " AND catalog.SKU = winelist.SKU AND winesold.date >= '". $periodStart ."' AND winesold.date <= '". $periodEnd ."' GROUP BY winesold.sku ORDER BY sold DESC";
-    
+
     $response["wines"] = $db->getRecord($query);
 
     $query = "SELECT DATE_FORMAT(cl.datefield, '%e %b') as days, IFNULL(SUM(ws.value),0) AS total_sales, IFNULL((SUM(ws.value)*wl.price),0) AS total_revenues, IFNULL((SUM(ws.value)*wl.suggested_price),0) AS total_restaurants FROM winesold ws 
@@ -267,32 +296,40 @@ $app->post('/login', function() use ($app) {
     verifyRequiredParams(array('email', 'password'),$r->customer);
     $response = array();
     $db = new DbHandler();
+    $cookieLifetime = 365 * 24 * 60 * 60; //a year in second
     $password = $r->customer->password;
     $email = $r->customer->email;
-    $user = $db->getOneRecord("SELECT uid,name,password,email,created,role FROM users WHERE email='$email'");
+    $user = $db->getOneRecord("SELECT users.uid,users.name,users.password,users.email,users.created,users.role FROM users WHERE users.email='$email'");
     if ($user != NULL) {
         if(passwordHash::check_password($user['password'],$password)){
+            //get the customer related to the user
+            $customer = $db->getOneRecord("SELECT customers.associated_to, customers.payment_type FROM users, customers WHERE users.uid = customers.associated_to AND users.uid = ".$user['uid']);
+            if($customer == null) {
+                $customer['associated_to'] = 0;
+                $customer['payment_type'] = 0;
+            }
             $response['status'] = "success";
-            $response['message'] = '<strong>Welcome to The Winesider</strong><br>Logged in succesfully.';
-            $response['name'] = $user['name'];
+            $response['message'] = 'Benvenuto in The Winesider.';
             $response['uid'] = $user['uid'];
-            $response['email'] = $user['email'];
-            $response['createdAt'] = $user['created'];
             $response['role'] = $user['role'];
-            if (!isset($_SESSION)) {
+            $response['associated_to'] = $customer['associated_to']; 
+            $response['payment_is_set'] = $customer['payment_type']; 
+            if (!isset($_COOKIE)) {
                 session_start();
             }
-            $_SESSION['uid'] = $user['uid'];
-            $_SESSION['email'] = $email;
-            $_SESSION['name'] = $user['name'];
-            $_SESSION['role'] = $user['role'];
+            setcookie("uid", $user['uid'], time()+$cookieLifetime);
+            setcookie("email", $user['email'], time()+$cookieLifetime);
+            setcookie("name", $user['name'], time()+$cookieLifetime);
+            setcookie("role", $user['role'], time()+$cookieLifetime);
+            setcookie("associated_to", $customer['associated_to'], time()+$cookieLifetime);
+            setcookie("payment_is_set", $customer['payment_type'], time()+$cookieLifetime);
         } else {
             $response['status'] = "error";
-            $response['message'] = 'Login failed. Incorrect credentials';
+            $response['message'] = 'Attenzione, credenziali sbagliate.';
         }
     }else {
         $response['status'] = "error";
-        $response['message'] = 'No such user is registered';
+        $response['message'] = 'Attenzione, non esiste nessun utente con questa mail.';
     }
     echoResponse(200, $response);
 });
@@ -306,38 +343,35 @@ $app->post('/signUp', function() use ($app) {
     $db = new DbHandler();
     $name = $r->customer->name;
     $surname = $r->customer->surname;
-    $role =  "customer";
-    $restaurant = $r->customer->restaurant;
-    $address =  "";
     $email = $r->customer->email;
     $password = $r->customer->password;
-    $phone = "";
+    $cookieLifetime = 365 * 24 * 60 * 60; //a year in second
     $isUserExists = $db->getOneRecord("SELECT 1 FROM users WHERE email='$email'");
     if(!$isUserExists){
         $r->customer->password = passwordHash::hash($password);
         $tabble_name = "users";
-        $column_names = array('name','surname','role','restaurant','address','email','password','phone');
+        $column_names = array('name','surname','email','password');
         $result = $db->insertIntoTable($r->customer, $column_names, $tabble_name);
         if ($result != NULL) {
             $response["status"] = "success";
-            $response["message"] = "User account created successfully";
+            $response["message"] = "Utente creato correttamente";
             $response["uid"] = $result;
-            if (!isset($_SESSION)) {
-                session_start();
-            }
-            $_SESSION['uid'] = $response["uid"];
-            $_SESSION['phone'] = $phone;
-            $_SESSION['name'] = $name;
-            $_SESSION['email'] = $email;
+            session_start();
+            setcookie("uid", $result, time()+$cookieLifetime);
+            setcookie("email", $email, time()+$cookieLifetime);
+            setcookie("name", $name, time()+$cookieLifetime);
+            setcookie("role", 'customer', time()+$cookieLifetime);
+            setcookie("associated_to", 0, time()+$cookieLifetime);
+            setcookie("payment_is_set", 0, time()+$cookieLifetime);
             echoResponse(200, $response);
         } else {
             $response["status"] = "error";
-            $response["message"] = "Failed to create customer. Please try again";
+            $response["message"] = "Si è verificato un problema. Per favore, riprovare.";
             echoResponse(201, $response);
         }            
     }else{
         $response["status"] = "error";
-        $response["message"] = "An user with the provided phone or email exists!";
+        $response["message"] = "La mail è già presente.";
         echoResponse(201, $response);
     }
 });
@@ -347,7 +381,7 @@ $app->get('/logout', function() {
     $db = new DbHandler();
     $session = $db->destroySession();
     $response["status"] = "info";
-    $response["message"] = "Logged out successfully";
+    $response["message"] = $session;
     echoResponse(200, $response);
 });
 ?>

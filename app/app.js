@@ -53,6 +53,11 @@ app.config(['$routeProvider',
                     templateUrl: 'partials/addcustomer.html',
                     controller: 'twsCtrl'
                 })
+                    .when('/addpayment', {
+                    title: 'Add a payment',
+                    templateUrl: 'partials/addpayment.html',
+                    controller: 'twsCtrl'
+                })
                     .when('/', {
                     title: 'WineSpy',
                     templateUrl: 'partials/winespy.html',
@@ -68,9 +73,17 @@ app.config(['$routeProvider',
         $rootScope.authenticated = false;
         Data.get('session').then(function (results) {
             if (results.uid) {
+                console.log(JSON.stringify(results));
                 $rootScope.authenticated = true;
                 $rootScope.role = results.role;
                 $rootScope.sessionUid = results.uid;
+                $rootScope.associated_to = results.associated_to;
+                $rootScope.payment_is_set = results.payment_is_set;
+                if(results.associated_to == 0) {
+                    $location.path("/addcustomer");
+                }else if (results.payment_is_set == 0) {
+                    $location.path("/addpayment");
+                } 
             } else {
                 var nextUrl = next.$$route.originalPath;
                 if (nextUrl == '/signup') {

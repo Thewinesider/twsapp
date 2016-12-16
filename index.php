@@ -33,14 +33,14 @@
                             TWS 
                         </div>
                     </li>
-                    <li>
+                    <li ng-class="(associated_to == 0 || payment_is_set == 0) ? 'disabled' : ''">
                         <a><i class="fa fa-bar-chart"></i><span class="nav-label">Statistiche</span> </a>
                         <ul class="nav nav-second-level collapse">
                             <li><a ng-href="#/dashboard"><i class="fa fa-bar-chart"></i> Statistiche</a></li>
                             <li><a ng-href="#/admin"><i class="fa fa-list-ul"></i> Dettaglio</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li ng-class="(associated_to == 0 || payment_is_set == 0) ? 'disabled' : ''">
                         <a><i class="fa fa-book"></i> <span class="nav-label">Il nostro catalogo</span> </a>
                         <ul class="nav nav-second-level collapse">
                             <li><a ng-href="#/catalog-list"><i class="fa fa-list"></i> Lista vini</a></li>
@@ -48,7 +48,7 @@
                             <!--li><a ng-href="#/catalog-grid"><i class="fa fa-pie-chart"></i> Overview vini</a></li-->
                         </ul>
                     </li>
-                    <li>
+                    <li ng-class="(associated_to == 0 || payment_is_set == 0) ? 'disabled' : ''">
                         <a><i class="fa fa-tablet"></i> <span class="nav-label">WineSpy</span></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a ng-href="#/winespy"><i class="fa fa-tablet"></i> Scarica venduto</a></li>
@@ -56,12 +56,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a><i class="fa fa-gear"></i> <span class="nav-label">Gestione</span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a ng-href="#/addcustomer"><i class="fa fa-user-plus"></i> Nuovo cliente</a></li>
-                            <li><a ng-href="#/lastwine"><i class="fa fa-users"></i> Lista clienti</a></li>
-                            <li><a ng-href="#/lastwine"><i class="fa fa-eur"></i> Incassa</a></li>
-                        </ul>
+                        <a ng-href="#/addcustomer"><i class="fa fa-user-plus"></i> <span class="nav-label">Gestione</span></a>
                     </li>
                     <li>
                         <a ng-click="logout()"><i class="fa fa-sign-out"></i><span class="nav-label"> Log out</span></a>

@@ -26,9 +26,12 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             customer: customer
         }).then(function (results) {
             Data.toast(results);
-            if (results.status == "success") {
+            console.log(JSON.stringify(results));
+            if (results.status == "success" && results.associated_to != 0 && results.payment_is_set != 0) {
                 $location.path('winespy');
-            }
+            } else {
+                $location.path('addcustomer');
+            } 
         });
     };
 
@@ -80,7 +83,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         }).then(function (results) {
             Data.toast(results);
             if (results.status == "success") {
-                $location.path('login');
+                $location.path('addcustomer');
             }
         });
     };
@@ -88,21 +91,16 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     /* 
     *   Add a new user with Credit Card 
     */
-    $scope.newCustomer = function (customer, payment_type) {
-        if(payment_type == 1) {
-            $api = "customerCC";
-        } else {
-            $api = "customerSDD";
-        }
-        Data.post($api, {
+    $scope.newCustomer = function (customer) {
+        customer.associated_to = $rootScope.sessionUid;
+        Data.post('customer', {
             customer: customer
         }).then(function (results) {
-            if (results["status"] == 'success' && payment_type == 1) {
-                $window.location.href = results["url"]; 
-            } else {
-                Data.toast(results);
+            Data.toast(results);
+            if(results.code == 200) {
+                $location.path('addpayment');
             }
-
+            
         });
     };
 
