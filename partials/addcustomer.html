@@ -1,12 +1,14 @@
 <div id="page-wrapper" class="gray-bg">
     <div id="addCustomerForm" class="wrapper wrapper-content animated fadeInRight">
-        <div class="col-md-12">
-            <div class="yellow-bg text-center">
-                <div class="m-b-md" style=" font-size: 15px; padding: 8px;">
-                    <i class="fa fa-warning"></i> <br/>
-                    Fino a quando non completerai le informazioni, non sarà possibile utilizzare The Winesider.<br/>
-                    Prenditi il tuo tempo. Compila correttamente tutti i campi, accertandoti di non commettere errori.<br/>
-                    Grazie.
+        <div class="col-md-12 text-center">
+            <div class="panel">
+                <div class="panel-heading">
+                    <i class="fa fa-warning"></i> Inserisci le informazioni della tua attività.
+                </div>
+                <div class="panel-body">
+                    <p>Fino a quando non completerai le informazioni, non sarà possibile utilizzare The Winesider.</p>
+                    <p>Prenditi il tuo tempo. Compila correttamente tutti i campi, accertandoti di non commettere errori.</p>
+                    <p>Grazie.</p>
                 </div>
             </div>
         </div>
@@ -18,7 +20,7 @@
                     <div class="form-group"></div>
                     <div class="row">
                         <div class="col-md-12">
-                            <input type="text" class="form-control txt-xl" placeholder="Ragione sociale completa" name="business_name" ng-model="customer.business_name" focus required/>
+                            <input type="text" class="form-control txt-xl" placeholder="Ragione sociale completa" name="business_name" ng-model="customer.business_name" required focus/>
                         </div>
                     </div>
                     <div class="form-group"></div>
@@ -115,7 +117,7 @@
                     <div class="text-center">
                         <div class="form-group"></div>
                         <span ng-show="signupForm.$invalid" class="help-block">Compila correttamente tutti i campi per registrarti.</span>
-                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="newCustomer(customer)" data-ng-disabled="signupForm.$invalid">
+                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="addCustomer(customer)" data-ng-disabled="signupForm.$invalid">
                             Conferma dati e procedi
                         </button>
                     </div>

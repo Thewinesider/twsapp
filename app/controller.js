@@ -71,6 +71,11 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     $scope.getWineList = function () {
         Data.get('wineList').then(function (results){
             $scope.wines = results;
+            if($rootScope.payment_is_set == 1) {
+                $scope.payment_type = "Carta di Credito";
+            } else {
+                $scope.payment_type = "Bonifico Bancario";  
+            }            
         });
     };
 
@@ -81,7 +86,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         Data.post('signUp', {
             customer: customer
         }).then(function (results) {
-            Data.toast(results);
+            console.log("results");
             if (results.status == "success") {
                 $location.path('addcustomer');
             }
@@ -91,18 +96,42 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     /* 
     *   Add a new user with Credit Card 
     */
-    $scope.newCustomer = function (customer) {
+    $scope.addCustomer = function (customer) {
         customer.associated_to = $rootScope.sessionUid;
         Data.post('customer', {
             customer: customer
         }).then(function (results) {
             Data.toast(results);
-            if(results.code == 200) {
+            if(results.status == "success") {
                 $location.path('addpayment');
             }
-            
         });
     };
+    
+    /*
+    *   Create a new Wallet on Lemonway
+    */
+    $scope.addLemonwayWallet = function(lemonway) {
+        if(lemonway.payment_type == 1) {
+            $api = "registerCC";
+        } else {
+            $api = "registerSDD";
+        }
+        console.log("API: " + $api);
+        Data.post($api, {
+            lemonway: lemonway
+        }).then(function (results){
+            console.log(results);
+            if (results["status"] == "success" && lemonway.payment_type == 1){
+                $window.location.href = results["url"];
+            } else if (results["status"] == "success" && lemonway.payment_type == 2) {
+                Data.toast(results);
+                $location.path("winespy");
+            } else {
+                Data.toast(results);
+            }
+        });
+    }
 
     /* 
     *   Get this week of sales from the logged user or from a specific user

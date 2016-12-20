@@ -21,10 +21,6 @@ if (isset($_POST) && sizeof($_POST) > 0){
     }
 } else if (isset ($_GET) && sizeof($_GET) > 0){
     //user browser is returning from payment
-    print 'GET : ';
-    foreach ($_GET as $key => $value) {
-        print ('<br/>GET '.$key.' : '.$value.'');
-    }
     if (isset($_GET['response_wkToken'])){
         //call GetMoneyInTransDetails to retrieve payment status, and proceed depending on result.
         $merchantToken = $_GET['response_wkToken'];

@@ -55,7 +55,7 @@
                             <li><a ng-href="#/lastwine"><i class="fa fa-clock-o"></i> Vini scaricati</a></li>
                         </ul>
                     </li>
-                    <li>
+                    <li ng-show="(associated_to == 0 && payment_is_set == 0)">
                         <a ng-href="#/addcustomer"><i class="fa fa-user-plus"></i> <span class="nav-label">Gestione</span></a>
                     </li>
                     <li>

@@ -1,11 +1,12 @@
 <div id="page-wrapper" class="gray-bg">
     <div id="addCustomerForm" class="wrapper wrapper-content animated fadeInRight">
-        <div class="col-md-12">
-            <div class="yellow-bg text-center">
-                <div class="m-b-md" style=" font-size: 15px; padding: 8px;">
-                    <i class="fa fa-warning"></i> <br/>
-                    Le informazioni relative alla tua attività sono state registrate correttamente!<br/>
-                    Questo è l'ultimo passaggio: inserisci i dati per il pagamento.<br/>
+        <div class="col-md-12 text-center">
+            <div class="panel">
+                <div class="panel-heading">
+                    <i class="fa fa-check-circle-o"></i> Le informazioni relative alla tua attività sono state registrate correttamente!
+                </div>
+                <div class="panel-body">
+                    <p> Questo è l'ultimo passaggio: inserisci i dati per il pagamento.</p>
                 </div>
             </div>
         </div>
@@ -16,44 +17,50 @@
                     <h2>Informazioni per il pagamento</h2>
                     <div class="row">
                         <div class="col-md-6">
-                            <select id="status" class="form-control txt-xl" name="payment_type" ng-model="customer.payment_type" required>
+                            <select id="status" class="form-control txt-xl" name="payment_type" ng-model="lemonway.payment_type" required focus>
                                 <option ng-value="1">Carta di credito</option>
                                 <option ng-value="2">Bonifico SEPA - RID bancario settimanale</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group"></div>
-                    <div class="row" ng-show="customer.payment_type == 1">
+                    <div class="row" ng-show="lemonway.payment_type == 1">
                         <div class="col-md-12">
                             <h2 class="text-center">Verrai reindirizzato sul server del partner per la registrazione della carta.</h2>
                         </div>
                     </div>
-                    <div ng-show="customer.payment_type == 2">
+                    <div ng-show="lemonway.payment_type == 2">
                         <div class="row">
                             <div class="col-md-3">
-                                <input type="text" class="form-control txt-xl" name="bank_holder" placeholder="Titolare del conto" ng-model="customer.bank_holder" ng-required="customer.payment_type == 2"/>
+                                <input type="text" class="form-control txt-xl" name="bank_holder" placeholder="Titolare del conto" ng-model="lemonway.bank_holder" ng-required="lemonway.payment_type == 2"/>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control txt-xl" name="bank_iban" placeholder="IBAN" ng-model="customer.bank_iban" ng-required="customer.payment_type == 2"/>
+                                <input type="text" class="form-control txt-xl" name="bank_iban" placeholder="IBAN" ng-model="lemonway.bank_iban" ng-required="lemonway.payment_type == 2"/>
                             </div>
                             <div class="col-md-3">
-                                <input type="text" class="form-control txt-xl" name="bank_bic" placeholder="BIC" ng-model="customer.bank_bic" ng-required="customer.payment_type == 2"/>
+                                <input type="text" class="form-control txt-xl" name="bank_bic" placeholder="BIC" ng-model="lemonway.bank_bic" ng-required="lemonway.payment_type == 2"/>
                             </div>
                         </div>
                         <div class="form-group"></div>
                         <div class="row">
                             <div class="col-md-6">
-                                <input type="text" class="form-control txt-xl" placeholder="Nome della Banca " name="bank_name" ng-model="customer.bank_name" ng-required="customer.payment_type == 2"/>
+                                <input type="text" class="form-control txt-xl" placeholder="Nome della Banca " name="bank_name" ng-model="lemonway.bank_name" ng-required="lemonway.payment_type == 2"/>
                             </div>
                             <div class="col-md-6">
-                                <input type="text" class="form-control txt-xl" placeholder="Domicilio della Banca" name="bank_address" ng-model="customer.bank_address" ng-required="customer.payment_type == 2"/>
+                                <input type="text" class="form-control txt-xl" placeholder="Domicilio della Banca" name="bank_address" ng-model="lemonway.bank_address" ng-required="lemonway.payment_type == 2"/>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="checkbox" ng-model="lemonway.terms" ng-init="lemonway.terms = false"> I pagamenti vengono effettuati attaverso un servizio sicuro, Lemonway. Accetta i <a href="../doc/lemonway_terms.pdf">termini e condizioni del servizio</a> per procedere.
                         </div>
                     </div>
                     <div class="text-center">
                         <div class="form-group"></div>
                         <span ng-show="signupForm.$invalid" class="help-block">Compila correttamente tutti i campi per registrarti.</span>
-                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="newCustomer(customer)" data-ng-disabled="signupForm.$invalid">
+                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="addLemonwayWallet(lemonway)" data-ng-disabled="signupForm.$invalid || lemonway.terms == false">
                             Conferma dati e procedi
                         </button>
                     </div>

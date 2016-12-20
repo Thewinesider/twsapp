@@ -51,7 +51,6 @@ class DbHandler {
         }
         //error_log("somewhere here");
         $query = "INSERT INTO ".$table_name."(".trim($columns,',').") VALUES(".trim($values,',').")";
-        echo $query;
         $r = $this->conn->query($query) or error_log($this->conn->error.__LINE__);
 
         if ($r) {

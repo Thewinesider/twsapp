@@ -29,6 +29,11 @@ if (count($res->operations) != 1){
     return;
 } else {
     if ((string)$res->operations[0]->STATUS == Operation::STATUS_SUCCES){
+        ob_start();
+        $db = new DbHandler();
+        $cookieLifetime = 365 * 24 * 60 * 60;
+        $db->execQuery("UPDATE customers SET payment_type = 1 WHERE associated_to = " . $_COOKIE['uid']);
+        setcookie("payment_is_set", 1, time() + $cookieLifetime);
         print '<br/>Money-in successful : ';
         print '<br/>ID : '. $res->operations[0]->ID;
         print '<br/>AMOUNT : '. $res->operations[0]->CRED;
