@@ -79,10 +79,13 @@ app.config(['$routeProvider',
                 $rootScope.sessionUid = results.uid;
                 $rootScope.associated_to = results.associated_to;
                 $rootScope.payment_is_set = results.payment_is_set;
+                //force data input 
                 if(results.associated_to == 0) {
                     $location.path("/addcustomer");
+                    $location.hash('page-wrapper');
                 }else if (results.payment_is_set == 0) {
                     $location.path("/addpayment");
+                    $location.hash('page-wrapper');
                 } 
             } else {
                 var nextUrl = next.$$route.originalPath;

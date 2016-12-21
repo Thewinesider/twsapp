@@ -25,7 +25,7 @@
     </div>
     <div ng-init="getWineList()">
         <div class="container-fluid animated fadeInRight">
-            <div class="col-md-12">
+            <div class="col-md-12" ng-show="wines.length == 0">
                 <div class="text-center">
                     <div class="m-b-md" style=" font-size: 15px; padding: 8px;">
                         <div class="panel">
@@ -34,7 +34,6 @@
                             </div>
                             <div class="panel-body">
                                 <p>Il pagamento da te scelto è: <strong>{{payment_type}}</strong>.</p>
-                                <p ng-show="payment_is_set == 2">Ti forniremo la documentazione cartacea da portare alla tua banca per registrare il RID bancario. </p>
                                 <p>La tua carta vini sarà visualizzata a breve su The Winesider!</p>
                             </div>
                         </div>

@@ -27,11 +27,7 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         }).then(function (results) {
             Data.toast(results);
             console.log(JSON.stringify(results));
-            if (results.status == "success" && results.associated_to != 0 && results.payment_is_set != 0) {
-                $location.path('winespy');
-            } else {
-                $location.path('addcustomer');
-            } 
+            $location.path('winespy');
         });
     };
 
@@ -86,10 +82,8 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
         Data.post('signUp', {
             customer: customer
         }).then(function (results) {
-            console.log("results");
-            if (results.status == "success") {
-                $location.path('addcustomer');
-            }
+            Data.toast(results);
+            $location.path('winespy');
         });
     };
 
@@ -104,10 +98,11 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             Data.toast(results);
             if(results.status == "success") {
                 $location.path('addpayment');
+                $location.hash('page-wrapper');
             }
         });
     };
-    
+
     /*
     *   Create a new Wallet on Lemonway
     */

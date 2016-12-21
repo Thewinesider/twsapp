@@ -89,6 +89,12 @@ class lwConnect {
             case 253:
                 $error = "Formato telefono non valido.";
                 break;
+            case 204:
+                $error = "La mail è già associata ad un Wallet.";
+                break;
+            case 147: 
+                $error = "Il wallet non esiste.";
+                break;
         }
         return $error;
     }

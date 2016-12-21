@@ -22,8 +22,7 @@
 <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
     </head>
-
-    <body id="wrapper" class="gray-bg mini-navbar" ng-cloak="">
+    <body id="wrapper" class="mini-navbar" ng-cloak="">
         <nav class="navbar-default navbar-static-side" role="navigation" ng-show="authenticated">
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu">

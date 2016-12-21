@@ -1,4 +1,5 @@
 <?php
+header( "refresh:5;url=../../" );
 use LemonWay\Models\Operation;
 
 $lemonway = lwConnect::getApiInstance();
@@ -34,29 +35,32 @@ if (count($res->operations) != 1){
         $cookieLifetime = 365 * 24 * 60 * 60;
         $db->execQuery("UPDATE customers SET payment_type = 1 WHERE associated_to = " . $_COOKIE['uid']);
         setcookie("payment_is_set", 1, time() + $cookieLifetime);
-        print '<br/>Money-in successful : ';
-        print '<br/>ID : '. $res->operations[0]->ID;
-        print '<br/>AMOUNT : '. $res->operations[0]->CRED;
-        print '<br/>AUTHORIZATION NUMBER : '. $res->operations[0]->EXTRA->AUTH;
+?>
+        <div style="text-align: center; font-size: 30px; border: 1px solid #eee; width: 1024px; margin:0 auto">
+            Tutto ok! Hai completato la registrazione. Verrai reindirizzato su The Winesider entro <strong>5 secondi</strong>.
+        </div>
+<?php
         /* TODO: examples of things to do :
             -if $isFromGET = true, display a payment successful message
             -mark the payment as successful in your database
             -send a confirmation email if it wasn't already sent
         */
     } elseif ((string)$res->operations[0]->STATUS == Operation::STATUS_ERROR){
-        print '<br/>Money-in failed : ';
-        print '<br/>ID : '. $res->operations[0]->ID;
-        print '<br/>AMOUNT : '. $res->operations[0]->CRED;
-        print '<br/>AUTHORIZATION NUMBER : '. $res->operations[0]->EXTRA->AUTH;
+?>
+        <div style="text-align: center; font-size: 30px; border: 1px solid #eee; width: 1024px; margin:0 auto">
+            Non è stato possibile concludere l'operazione, devi inserire nuovamente i dati. Verrai reindirizzato su The Winesider entro <strong>5 secondi</strong>.
+        </div>
+<?php
         /* TODO: examples of things to do :
             -if $isFromGET = true, display a payment failed message
             -mark the payment as failed in your database
         */
     } elseif ((string)$res->operations[0]->STATUS == Operation::STATUS_WAITING_FINALISATION){
-        print '<br/>Money-in pending : ';
-        print '<br/>ID : '. $res->operations[0]->ID;
-        print '<br/>AMOUNT : '. $res->operations[0]->CRED;
-        print '<br/>AUTHORIZATION NUMBER : '. $res->operations[0]->EXTRA->AUTH;
+?>
+        <div style="text-align: center; font-size: 30px; border: 1px solid #eee; width: 1024px; margin:0 auto">
+            Hai annullato l'operazione, i dati non sono stati registrati. Dovrei inserirli nuovamente. Verrai reindirizzato su The Winesider entro <strong>5 secondi</strong>.
+        </div>
+<?php
         /* TODO: examples of things to do :
             -if $isFromGET = true, display a payment pending message. It is possible that the customer goes back to the Atos card payment form and decides to pay
         */

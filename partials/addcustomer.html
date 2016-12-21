@@ -1,5 +1,5 @@
 <div id="page-wrapper" class="gray-bg">
-    <div id="addCustomerForm" class="wrapper wrapper-content animated fadeInRight">
+    <div id="addCustomerForm" class="row wrapper wrapper-content animated fadeInRight">
         <div class="col-md-12 text-center">
             <div class="panel">
                 <div class="panel-heading">
@@ -91,19 +91,8 @@
                     </div>
                     <div class="form-group"></div>
                     <div class="row">
-                        <div class="col-md-6">
-                            <label>Giorno spedizione preferito</label>
-                            <select class="form-control txt-xl" name="shipping_day" ng-model="customer.shipping_day" required>
-                                <option ng-value="Lunedi" >Lunedi</option>
-                                <option ng-value="Martedi" >Martedi</option>
-                                <option ng-value="Mercoledi" >Mercoledi</option>
-                                <option ng-value="Giovedi" >Giovedi</option>
-                                <option ng-value="Venerdi" >Venerdi</option>
-                                <option ng-value="Sabato" >Sabato</option>
-                            </select>
-                        </div>
                         <div class="col-md-3">
-                            <label>Orario preferito</label>
+                            <label>Orario per la consegna merce preferito</label>
                             <select class="form-control txt-xl" name="shipping_hour" ng-model="customer.shipping_hour" required>
                                 <option ng-value="1">Mattina 9-11</option>
                                 <option ng-value="2">Mattina 11-13</option>
@@ -112,13 +101,18 @@
                                 <option ng-value="5">Sera 17-19</option>
                             </select>
                         </div>
+                        <div class="col-md-6">
+                            <label>Commenti sulla consegna merce (es. giorno di chiusura locale)</label>
+                            <input type="text" class="form-control txt-xl" placeholder="Commenti" name="shipping_comment" ng-model="customer.shipping_comment"/>
+                        </div>
                     </div>
                     <div class="form-group"></div>
                     <div class="text-center">
                         <div class="form-group"></div>
                         <span ng-show="signupForm.$invalid" class="help-block">Compila correttamente tutti i campi per registrarti.</span>
-                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="addCustomer(customer)" data-ng-disabled="signupForm.$invalid">
-                            Conferma dati e procedi
+                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="addCustomer(customer)" data-ng-disabled="signupForm.$invalid" ng-init="clicked = false" ng-disabled = "click">
+                            <div class="spinner" ng-show="clicked"></div>
+                            <div ng-click="clicked = true" ng-show="!clicked">Conferma dati e procedi</div>
                         </button>
                     </div>
                 </div>

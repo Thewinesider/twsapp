@@ -60,8 +60,9 @@
                     <div class="text-center">
                         <div class="form-group"></div>
                         <span ng-show="signupForm.$invalid" class="help-block">Compila correttamente tutti i campi per registrarti.</span>
-                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="addLemonwayWallet(lemonway)" data-ng-disabled="signupForm.$invalid || lemonway.terms == false">
-                            Conferma dati e procedi
+                        <button type="submit" class="btn btn-primary full-width btn-xl" ng-click="addLemonwayWallet(lemonway)" data-ng-disabled="signupForm.$invalid || lemonway.terms == false" ng-disabled = "clicked" ng-init="clicked = false">
+                            <div class="spinner" ng-show="clicked"></div>
+                            <div ng-click="clicked = true" ng-show="!clicked">Conferma dati e procedi</div>
                         </button>
                     </div>
                 </div>

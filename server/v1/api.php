@@ -36,7 +36,7 @@ $app->post('/customer', function () use ($app) {
         echoResponse(201, $response);
     } else {
         //register the user on TWS
-        $column_names = array('business_name','vat_number','tax_code','email','pec','legal_address','legal_city','legal_cap','attorney_name','attorney_surname','attorney_taxcode','attorney_phone_number','shipping_address','shipping_city','shipping_cap','shipping_day','shipping_hour','associated_to');
+        $column_names = array('business_name','vat_number','tax_code','email','pec','legal_address','legal_city','legal_cap','attorney_name','attorney_surname','attorney_taxcode','attorney_phone_number','shipping_address','shipping_city','shipping_cap','shipping_comment','shipping_hour','associated_to');
         $result = $db->insertIntoTable($r->customer, $column_names, 'customers');
         if ($result != NULL) {
             //update the cookie
@@ -60,7 +60,7 @@ $app->post('/registerSDD', function () use ($app) {
 
     //get the data
     $r = json_decode($app->request->getBody());
-
+    $cookieLifetime = 365 * 24 * 60 * 60;
     //check if the user already exist 
     $customer = $db->getOneRecord("SELECT * FROM customers WHERE associated_to = '" . $session["uid"] ."'");
     if ($customer == null) {
@@ -71,20 +71,24 @@ $app->post('/registerSDD', function () use ($app) {
     } else { 
         $error_log = "";     
         //Register a new wallet on Lemonway
-        //Create the lemonway Wallet
-        $lmw_wallet_response = $lemonway->RegisterWallet(array('wallet' => $customer["id"],
-                                                               'clientMail' => $customer["email"],
-                                                               'clientFirstName' => $customer["attorney_name"],
-                                                               'clientLastName' => $customer["attorney_surname"],
-                                                               'phoneNumber' => $customer["attorney_phone_number"],
-                                                               'street' => $customer["legal_address"],
-                                                               'postCode' => $customer["legal_cap"],
-                                                               'city' => $customer["legal_city"],
-                                                               'companyName' => $customer["business_name"]));
-        //check if an error occured or if the wallet is already set on Lemonway
-        if(isset($lmw_wallet_response->lwError) && $lmw_wallet_response->lwError->CODE != 152){
-            $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
-            $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
+        $walletExist = $lemonway->GetWalletDetails(array('wallet'=>$customer["id"]));
+        //chek if the wallet is already set
+        if (isset($walletExist->lwError)) {
+            //Create the lemonway Wallet
+            $lmw_wallet_response = $lemonway->RegisterWallet(array('wallet' => $customer["id"],
+                                                                   'clientMail' => $customer["email"],
+                                                                   'clientFirstName' => $customer["attorney_name"],
+                                                                   'clientLastName' => $customer["attorney_surname"],
+                                                                   'phoneNumber' => $customer["attorney_phone_number"],
+                                                                   'street' => $customer["legal_address"],
+                                                                   'postCode' => $customer["legal_cap"],
+                                                                   'city' => $customer["legal_city"],
+                                                                   'companyName' => $customer["business_name"]));
+            //check if an error occured or if the wallet is already set on Lemonway
+            if(isset($lmw_wallet_response->lwError) && $lmw_wallet_response->lwError->CODE != 152){
+                $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
+                $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
+            }
         }
 
         //add a new IBAN to the wallet
@@ -99,6 +103,7 @@ $app->post('/registerSDD', function () use ($app) {
             $error = lwConnect::errorException($lmw_iban_response->lwError->CODE);
             $error_log .= "<br>" . $lmw_iban_response->lwError->CODE .": ".$error;
         }
+
 
         if ($error_log == "") {
             $code = 200;
@@ -138,20 +143,25 @@ $app->post('/registerCC', function () use ($app) {
         $error_log = '';
         //create a token to pass through lemonway
         $token = JWT::encode($customer["id"], 'secret_server_key');
-        //Create the lemonway Wallet
-        $lmw_wallet_response = $lemonway->RegisterWallet(array('wallet' => $customer["id"],
-                                                               'clientMail' => $customer["email"],
-                                                               'clientFirstName' => $customer["attorney_name"],
-                                                               'clientLastName' => $customer["attorney_surname"],
-                                                               'phoneNumber' => $customer["attorney_phone_number"],
-                                                               'street' => $customer["legal_address"],
-                                                               'postCode' => $customer["legal_cap"],
-                                                               'city' => $customer["legal_city"],
-                                                               'companyName' => $customer["business_name"]));
+        $walletExist = $lemonway->GetWalletDetails(array('wallet'=>$customer["id"]));
+        //chek if the wallet is already set
+        if (isset($walletExist->lwError)) {
+            //Create the lemonway Wallet
+            $lmw_wallet_response = $lemonway->RegisterWallet(array('wallet' => $customer["id"],
+                                                                   'clientMail' => $customer["email"],
+                                                                   'clientFirstName' => $customer["attorney_name"],
+                                                                   'clientLastName' => $customer["attorney_surname"],
+                                                                   'phoneNumber' => $customer["attorney_phone_number"],
+                                                                   'street' => $customer["legal_address"],
+                                                                   'postCode' => $customer["legal_cap"],
+                                                                   'city' => $customer["legal_city"],
+                                                                   'companyName' => $customer["business_name"]));
 
-        if(isset($lmw_wallet_response->lwError)){
-            $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
-            $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
+            if(isset($lmw_wallet_response->lwError)){
+                $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
+                $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
+            }
+
         }
 
         //Register the cc on Lemonway
@@ -164,8 +174,8 @@ $app->post('/registerCC', function () use ($app) {
                                                            'errorUrl'=>"http://localhost:8888/twsapp/server/v1/lemonwayStatus.php",
                                                            'registerCard' => '1'));
         if(isset($lmw_cc_response->lwError)){
-            $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
-            $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
+            $error = lwConnect::errorException($lmw_cc_response->lwError->CODE);
+            $error_log .=  "<br>" . $lmw_cc_response->lwError->CODE .": ".$error;
         }
 
         if ($error_log == "") {
