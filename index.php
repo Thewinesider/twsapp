@@ -39,9 +39,6 @@
                             <li><a ng-href="#/admin"><i class="fa fa-list-ul"></i> Dettaglio</a></li>
                         </ul>
                     </li>
-                    <li ng-class="associated_to == 0 || payment_is_set == 0) ? 'disabled' : ''">
-                        <a ng-href="#/winelist"><i class="fa fa-wpforms"></i><span class="nav-label">Carta vini</span></a>
-                    </li> 
                     <li ng-class="(associated_to == 0 || payment_is_set == 0) ? 'disabled' : ''">
                         <a><i class="fa fa-book"></i> <span class="nav-label">Il nostro catalogo</span> </a>
                         <ul class="nav nav-second-level collapse">
