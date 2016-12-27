@@ -133,7 +133,7 @@ class Response implements \ArrayAccess, \Countable, \IteratorAggregate
     public function __construct($body = '', $status = 200, $headers = array())
     {
         $this->setStatus($status);
-        $this->headers = new \Slim\Http\Headers(array('Content-Type' => 'application/javascript'));
+        $this->headers = new \Slim\Http\Headers(array('Content-Type' => 'text/html'));
         $this->headers->replace($headers);
         $this->cookies = new \Slim\Http\Cookies();
         $this->write($body);

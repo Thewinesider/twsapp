@@ -71,36 +71,36 @@
     <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
 
     <!-- Jquery  -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-touch.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
-    <script src="js/ui-bootstrap-tpls-2.2.0.min.js"></script>
-    <script async src="js/chart.min.js"></script>
-    <script async src="js/underscore.min.js"></script>
-    <script type="text/javascript" src="js/chartjs-directive.min.js"></script>
+    <script type="application/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="application/javascript"  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script type="application/javascript"  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script type="application/javascript"  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-touch.min.js"></script>
+    <script type="application/javascript"  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+    <script type="application/javascript"  src="js/ui-bootstrap-tpls-2.2.0.min.js"></script>
+    <script type="application/javascript"  async src="js/chart.min.js"></script>
+    <script type="application/javascript"  async src="js/underscore.min.js"></script>
+    <scrip type="application/javascript" t type="text/javascript" src="js/chartjs-directive.min.js"></script>
     <!-- moment.js -->
-    <script src="js/moment/min/moment.min.js"></script>
-    <script src="js/angular-moment/angular-moment.min.js"></script>
+    <script type="application/javascript"  src="js/moment/min/moment.min.js"></script>
+    <script type="application/javascript"  src="js/angular-moment/angular-moment.min.js"></script>
     <!-- daterangepicker.js -->
-    <script src="js/daterangepicker.min.js"></script>
-    <script src="js/angular-daterangepicker.min.js"></script>
+    <script type="application/javascript"  src="js/daterangepicker.min.js"></script>
+    <script type="application/javascript"  src="js/angular-daterangepicker.min.js"></script>
     <!-- daterangepicker.js -->
-    <script src="js/datatables/jquery.dataTables.min.js"></script>
-    <script src="js/datatables/angular-datatables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.colVis.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-    <script src="js/datatables/angular-datatables.buttons.min.js"></script>
+    <script type="application/javascript"  src="js/datatables/jquery.dataTables.min.js"></script>
+    <script type="application/javascript"  src="js/datatables/angular-datatables.min.js"></script>
+    <script type="application/javascript"  src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script type="application/javascript"  src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.colVis.min.js"></script>
+    <script type="application/javascript"  src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script type="application/javascript"  src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script type="application/javascript"  src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <script type="application/javascript"  src="js/datatables/angular-datatables.buttons.min.js"></script>
     <!-- Toastr -->
-    <script src="js/toaster.min.js"></script>
+    <script type="application/javascript"  src="js/toaster.min.js"></script>
     <!-- ANGULAR -->
-    <script src="app/app.js"></script>
-    <script src="app/factory.js"></script>
-    <script src="app/directives.js"></script>
-    <script src="app/controller.js"></script>
+    <script type="application/javascript"  src="app/app.js"></script>
+    <script type="application/javascript"  src="app/factory.js"></script>
+    <script type="application/javascript"  src="app/directives.js"></script>
+    <script type="application/javascript"  src="app/controller.js"></script>
 </html>
 
