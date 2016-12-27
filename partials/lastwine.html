@@ -16,7 +16,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <!-- YESTERDAY -->
         <div class="col-md-6">
-            <div class="ibox" ng-init="getWineSold(uid,'yesterday')">
+            <div class="ibox" ng-init="getStatistics(uid,'yesterday')">
                 <div class="ibox-content">
                     <h2>SCARICATI IERI</h2>
                     <p class="small"><i class="fa fa-glass"></i> Include tutti i vini scaricati <strong>entro le 12.00</strong> di oggi.</p>
@@ -40,7 +40,7 @@
         </div>
         <!-- TODAY -->
         <div class="col-md-6">
-            <div class="ibox" ng-init="getWineSold(uid,'today')">
+            <div class="ibox" ng-init="getStatistics(uid,'today')">
                 <div class="ibox-content">
                     <h2>SCARICATI OGGI</h2>
                     <p class="small"><i class="fa fa-glass"></i> Include tutti i vini scaricati <strong>dopo le 12.00</strong> di oggi</p>

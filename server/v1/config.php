@@ -1,6 +1,6 @@
 <?php
 
-$path = "local";
+$path = "prod";
 
 if($path=="local") {
     define('DB_USERNAME', 'root');
@@ -15,7 +15,7 @@ if($path=="local") {
 }elseif($path=="prod"){
     define('DB_USERNAME', 'admin_tws');
     define('DB_PASSWORD', 'Gaib!lre1098');
-    define('DB_HOST', 'localhost');
+    define('DB_HOST', '93.186.252.54');
     define('DB_NAME', 'winespy');
 }else{
     define('DB_USERNAME', 'bb09e944f961bf');

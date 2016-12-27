@@ -1,0 +1,52 @@
+<div id="page-wrapper" class="gray-bg">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="row" ng-show="role == 'demo'">
+            <div class="col-md-12">
+                <div class="yellow-bg text-center">
+                    <div class="m-b-md">
+                        <i class="fa fa-warning"></i> Questa è un versione demo dell'app per i commerciali. Nessun dato viene considerato a fini statistici.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-init="getWineList()">
+        <div class="container-fluid animated fadeInRight">
+            <div class="col-md-12" ng-show="wines.length == 0">
+                <table datatable="ng" dt-options="dtOptions" dt-columns="dtColumns">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Prezzo di acquisto</th>
+                            <th>Prezzo di vendita consigliato</th>
+                            <th ng-show="role == 'admin'">Fatturato TWS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="wine in wines" >
+                            <td ng-show="role == 'admin'">
+                                {{wine.sku}}
+                            </td>
+                            <td>
+                                {{wine.name}}
+                            </td>
+                            <td>
+                                {{wine.type}}
+                            </td>
+                            <td>
+                                {{wine.sold | number}}
+                            </td>
+                            <td>
+                                {{wine.total_restaurants | number}} &euro;
+                            </td>
+                            <td ng-show="role == 'admin'">
+                                {{wine.total_revenues | number}} &euro;
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

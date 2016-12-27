@@ -58,6 +58,11 @@ app.config(['$routeProvider',
                     templateUrl: 'partials/addpayment.html',
                     controller: 'twsCtrl'
                 })
+                    .when('/winelist', {
+                    title: 'Winelist',
+                    templateUrl: 'partials/winelist.html',
+                    controller: 'twsCtrl'
+                })
                     .when('/', {
                     title: 'WineSpy',
                     templateUrl: 'partials/winespy.html',

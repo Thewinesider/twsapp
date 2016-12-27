@@ -197,7 +197,7 @@ $app->post('/registerCC', function () use ($app) {
 $app->get('/wineList', function() use ($app) {
     $db = new DbHandler();
     $session = $db->getSession();
-    $wines= $db->getRecord("SELECT winelist.sku, catalog.type, winelist.name, catalog.description, catalog.producer, catalog.alcohol, catalog.region  FROM winelist,catalog WHERE id_user = ". $session['uid'] . " AND catalog.sku = winelist.sku");
+    $wines= $db->getRecord("SELECT winelist.sku, winelist.type, winelist.name, winelist.price, winelist.region, winelist.price, winelist.suggested_price  FROM winelist WHERE id_user = ". $session['uid']);
     echoResponse(200, $wines);
 });
 

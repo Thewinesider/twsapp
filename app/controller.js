@@ -133,9 +133,16 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
     */
     $scope.getStatistics = function (uid) {
         $scope.uid = uid;
-        console.log("UID: " + this.uid);
-        $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
-        $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
+        if(range == 'yesterday'){
+            $scope.rangeStart = moment().subtract(1, 'day').format("YYYY-MM-DD 12:00:00");
+            $scope.rangeEnd = moment().format("YYYY-MM-DD 12:00:00");
+        }else if(range == 'today'){
+            $scope.rangeStart = moment().format("YYYY-MM-DD 12:00:00");
+            $scope.rangeEnd = moment().add(1, 'day').format("YYYY-MM-DD 12:00:00");
+        }else{
+            $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
+            $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
+        }
         Data.get('statistics', {
             periodStart: $scope.rangeStart,
             periodEnd: $scope.rangeEnd,
@@ -220,70 +227,6 @@ app.controller('twsCtrl', function ($scope, $rootScope, $routeParams, $filter, $
             DTColumnBuilder.newColumn('revenueTWS').withTitle('Fatturato TWS')
         ];
     };
-
-    /* 
-    *   Get this week of sales from the logged user or from a specific user
-    */
-    $scope.getWineSold = function (uid, range) {
-        //setting query data
-        $scope.uid = uid;
-        if(range == 'yesterday'){
-            $scope.rangeStart = moment().subtract(1, 'day').format("YYYY-MM-DD 12:00:00");
-            $scope.rangeEnd = moment().format("YYYY-MM-DD 12:00:00");
-        }else if(range == 'today'){
-            $scope.rangeStart = moment().format("YYYY-MM-DD 12:00:00");
-            $scope.rangeEnd = moment().add(1, 'day').format("YYYY-MM-DD 12:00:00");
-        }else{
-            $scope.rangeStart = moment($scope.date["startDate"]).format("YYYY-MM-DD hh:mm:ss");
-            $scope.rangeEnd = moment($scope.date["endDate"]).format("YYYY-MM-DD hh:mm:ss");
-        }
-        //getting data
-        Data.get('wineSold', {
-            periodStart: $scope.rangeStart,
-            periodEnd: $scope.rangeEnd,
-            uid: $scope.uid,
-        }).then(function (results){   
-            console.log(JSON.stringify(results));
-            if(range == 'yesterday'){
-                $scope.winesRange = results['wines'];
-            }else{
-                $scope.wines = results['wines'];
-            } 
-        });
-        //define buttons
-        if($rootScope.role == 'admin'){
-            var btn =[
-                'colvis',
-                'copy',
-                'print',
-                'excel'
-            ];
-        }else{
-            var btn =[
-                'copy',
-                'print',
-                'excel'
-            ];
-        }
-        //initialize the datatable
-        $scope.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
-            var defer = $q.defer();
-            defer.resolve($scope.wines);
-            return defer.promise;
-        })
-            .withPaginationType('full_numbers')
-        // Active Buttons extension
-            .withButtons(btn);
-        $scope.dtColumns = [
-            DTColumnBuilder.newColumn('sku').withTitle('SKU'),
-            DTColumnBuilder.newColumn('name').withTitle('Nome vino'),
-            DTColumnBuilder.newColumn('type').withTitle('Tipo'),
-            DTColumnBuilder.newColumn('sold').withTitle('Venduto'),
-            DTColumnBuilder.newColumn('revenue').withTitle('Fatturato'),
-            DTColumnBuilder.newColumn('revenueTWS').withTitle('Fatturato TWS')
-        ];
-    };
-
 
     $scope.drawChart = function (id, type1, type2, labels, data1, data2) {
         var ctx = $(id);
