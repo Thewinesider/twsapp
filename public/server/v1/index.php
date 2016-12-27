@@ -48,7 +48,7 @@ function echoResponse($status_code, $response) {
     // Http response code
     $app->status($status_code);
     // setting response content type to json
-    $app->contentType('application/json');
+    $app->contentType('application/javascript');
     echo json_encode($response);
 }
 
