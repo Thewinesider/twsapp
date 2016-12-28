@@ -9,24 +9,28 @@ class lwConnect {
      * @var string
      */
     const DIRECTKIT_URL    = 'https://sandbox-api.lemonway.fr/mb/winesider/dev/directkitxml/service.asmx';
+    //const DIRECTKIT_URL    = 'https://ws.lemonway.fr/mb/winesider/prod/directkitxml/service.asmx';
 
     /**
      * WEBKIT_URL Used to set API WebKit url
      * @var string
      */
     const WEBKIT_URL       = 'https://sandbox-webkit.lemonway.fr/winesider/dev/';
+    //const WEBKIT_URL       = 'https://webkit.lemonway.fr/mb/winesider/prod/';
 
     /**
      * LOGIN Used to set API user login
      * @var string
      */
     const LOGIN            = 'society';
+    //const LOGIN            = 'adminmb';
 
     /**
      * PASS Used to set API user password
      * @var string
      */
     const PASS             = '123456';
+    //const PASS             = 'adminmb';
 
     const CSS             = 'https://www.lemonway.fr/mercanet_lw.css';
 
@@ -94,6 +98,9 @@ class lwConnect {
                 break;
             case 147: 
                 $error = "Il wallet non esiste.";
+                break;
+            case 110: 
+                $error = "Credito insufficiente.";
                 break;
         }
         return $error;

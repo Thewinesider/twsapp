@@ -157,7 +157,7 @@ $app->post('/registerCC', function () use ($app) {
                                                                    'city' => $customer["legal_city"],
                                                                    'companyName' => $customer["business_name"]));
 
-            if(isset($lmw_wallet_response->lwError)){
+            if (isset($lmw_wallet_response->lwError)){
                 $error = lwConnect::errorException($lmw_wallet_response->lwError->CODE);
                 $error_log .=  "<br>" . $lmw_wallet_response->lwError->CODE .": ".$error;
             }
@@ -169,9 +169,9 @@ $app->post('/registerCC', function () use ($app) {
                                                            'amountTot' => '1.00',
                                                            'wkToken' => $token,
                                                            'comment'=>'Registrazione su The Winesider',
-                                                           'returnUrl'=>"http://localhost:8888/twsapp/server/v1/lemonwayStatus.php",
-                                                           'cancelUrl'=>"http://localhost:8888/twsapp/server/v1/lemonwayStatus.php",
-                                                           'errorUrl'=>"http://localhost:8888/twsapp/server/v1/lemonwayStatus.php",
+                                                           'returnUrl'=>"server/v1/lemonwayStatus.php",
+                                                           'cancelUrl'=>"server/v1/lemonwayStatus.php",
+                                                           'errorUrl'=>"server/v1/lemonwayStatus.php",
                                                            'registerCard' => '1'));
         if(isset($lmw_cc_response->lwError)){
             $error = lwConnect::errorException($lmw_cc_response->lwError->CODE);
